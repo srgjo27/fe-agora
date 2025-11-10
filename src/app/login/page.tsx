@@ -58,7 +58,7 @@ export default function LoginPage() {
             {/* Register Link */}
             <Link
               href={ROUTES.AUTH.REGISTER}
-              className="px-6 py-2 text-sm font-medium text-green-400 hover:text-green-300 transition-all duration-300 border border-green-500/30 rounded-lg hover:border-green-400/50 hover:bg-green-500/10"
+              className="px-6 py-2 text-xs font-medium text-green-400 hover:text-green-300 transition-all duration-300 border border-green-500/30 rounded-lg hover:border-green-400/50 hover:bg-green-500/10"
             >
               Initialize Account →
             </Link>
@@ -71,20 +71,20 @@ export default function LoginPage() {
         <div className="hidden lg:flex lg:w-1/2 flex-col justify-center px-12 xl:px-16">
           <div className="max-w-lg">
             {/* Access Status */}
-            <div className="inline-flex items-center px-4 py-2 bg-gray-800/60 rounded-lg text-blue-400 text-sm font-mono mb-8 border border-blue-500/30 shadow-lg shadow-blue-500/10">
+            <div className="inline-flex items-center px-4 py-2 bg-gray-800/60 rounded-lg text-blue-400 text-xs font-mono mb-8 border border-blue-500/30 shadow-lg shadow-blue-500/10">
               <div className="w-2 h-2 bg-blue-400 rounded-full mr-3 animate-pulse"></div>
               ACCESS_PORTAL: READY
             </div>
 
             {/* Main Heading */}
-            <h1 className="text-5xl xl:text-6xl font-bold text-white leading-tight mb-6 font-mono">
+            <h1 className="text-4xl xl:text-5xl font-bold text-white leading-tight mb-6 font-mono">
               <span className="text-blue-400">&gt;</span> AUTHENTICATE
               <span className="block text-green-400 mt-2">
                 USER_CREDENTIALS
               </span>
             </h1>
 
-            <p className="text-xl text-gray-300 mb-12 leading-relaxed">
+            <p className="text-base text-gray-300 mb-12 leading-relaxed">
               Re-establish connection to the developer neural network. Your
               digital identity awaits verification.
             </p>
@@ -118,7 +118,7 @@ export default function LoginPage() {
                       {item.metric}
                     </div>
                     <div
-                      className={`${item.color} font-mono font-bold text-lg`}
+                      className={`${item.color} font-mono font-bold text-base`}
                     >
                       {item.value}
                     </div>
@@ -148,7 +148,7 @@ export default function LoginPage() {
                   </div>
                 </div>
               </div>
-              <p className="text-gray-300 font-mono text-sm">
+              <p className="text-gray-300 font-mono text-xs">
                 "Your data is protected by military-grade encryption algorithms.
                 Zero-trust architecture ensures maximum security."
               </p>
@@ -195,7 +195,7 @@ export default function LoginPage() {
                     ACCESS_CONTROL_LOGIN
                   </h2>
                   <p className="text-gray-400 font-mono text-sm">
-                    Verify identity to access the network
+                    Verify identity to access the forum
                   </p>
                 </div>
 
@@ -203,22 +203,10 @@ export default function LoginPage() {
               </div>
             </div>
 
-            {/* Network Status */}
             <div className="mt-8 text-center">
               <p className="text-gray-500 font-mono text-sm mb-4">
-                SECURED_BY: QUANTUM_ENCRYPTION
+                &copy; 2025 AGORA | All rights reserved.
               </p>
-              <div className="flex items-center justify-center space-x-8 opacity-60">
-                <div className="text-green-400 font-mono text-sm">
-                  FIREWALL_ACTIVE
-                </div>
-                <div className="text-blue-400 font-mono text-sm">
-                  SSL_VERIFIED
-                </div>
-                <div className="text-purple-400 font-mono text-sm">
-                  DDoS_PROTECTED
-                </div>
-              </div>
             </div>
           </div>
         </div>

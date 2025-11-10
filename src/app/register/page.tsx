@@ -189,7 +189,7 @@ export default function RegisterPage() {
                     CREATE_USER_ACCOUNT
                   </h2>
                   <p className="text-gray-400 font-mono text-sm">
-                    Enter credentials to access the network
+                    Enter credentials to access the forum
                   </p>
                 </div>
 
@@ -197,23 +197,10 @@ export default function RegisterPage() {
               </div>
             </div>
 
-            {/* Network Stats */}
             <div className="mt-8 text-center">
               <p className="text-gray-500 font-mono text-sm mb-4">
-                NETWORK_NODES_ACTIVE: 10,847
+                &copy; 2025 AGORA | All rights reserved.
               </p>
-              <div className="flex items-center justify-center space-x-8 opacity-60">
-                <div className="text-green-400 font-mono text-sm">
-                  GOOGLE_NET
-                </div>
-                <div className="text-blue-400 font-mono text-sm">MS_CLOUD</div>
-                <div className="text-purple-400 font-mono text-sm">
-                  META_SYS
-                </div>
-                <div className="text-yellow-400 font-mono text-sm">
-                  APPLE_CORE
-                </div>
-              </div>
             </div>
           </div>
         </div>

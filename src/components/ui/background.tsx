@@ -1,5 +1,3 @@
-"use client";
-
 export const Background = () => {
   return (
     <div className="absolute inset-0 bg-gray-900">

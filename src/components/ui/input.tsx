@@ -1,6 +1,5 @@
 "use client";
 
-// Input component dengan validation states
 import { InputHTMLAttributes, forwardRef, useState } from "react";
 import { cn } from "@/lib/utils";
 

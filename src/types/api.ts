@@ -23,12 +23,10 @@ export class ApiError extends Error {
 }
 
 export interface PaginationMeta {
-  current_page: number;
-  total_pages: number;
   total_items: number;
-  per_page: number;
-  has_next_page: boolean;
-  has_prev_page: boolean;
+  total_pages: number;
+  current_page: number;
+  limit: number;
 }
 
 export interface PaginatedResponse<T> {

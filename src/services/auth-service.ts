@@ -1,34 +1,18 @@
 // Auth service untuk authentication
-import { apiClient } from "./api-client";
-
-export interface LoginRequest {
-  email: string;
-  password: string;
-}
-
-export interface RegisterRequest {
-  username: string;
-  email: string;
-  password: string;
-}
-
-export interface LoginResponse {
-  access_token: string;
-}
-
-export interface UserResponse {
-  id: string;
-  username: string;
-  email: string;
-  avatar_url?: string;
-  role: string;
-  created_at: string;
-}
+import { API_ENDPOINTS } from "@/constants";
+import { apiClient } from "@/services";
+import {
+  LoginRequest,
+  LoginResponse,
+  RegisterRequest,
+  UserResponse,
+} from "@/types";
+import { LocalStorage } from "@/utils";
 
 class AuthService {
   async login(credentials: LoginRequest): Promise<LoginResponse> {
     const response = await apiClient.post<LoginResponse>(
-      "/api/v1/auth/login",
+      API_ENDPOINTS.AUTH.LOGIN,
       credentials
     );
 
@@ -41,7 +25,7 @@ class AuthService {
 
   async register(userData: RegisterRequest): Promise<UserResponse> {
     const response = await apiClient.post<UserResponse>(
-      "/api/v1/auth/register",
+      API_ENDPOINTS.AUTH.REGISTER,
       userData
     );
     return response.data;
@@ -49,7 +33,7 @@ class AuthService {
 
   async logout(): Promise<void> {
     try {
-      await apiClient.post("/api/v1/auth/logout");
+      await apiClient.post(API_ENDPOINTS.AUTH.LOGOUT);
     } finally {
       this.removeAuthToken();
     }
@@ -57,7 +41,7 @@ class AuthService {
 
   async refreshToken(): Promise<LoginResponse> {
     const response = await apiClient.post<LoginResponse>(
-      "/api/v1/auth/refresh"
+      API_ENDPOINTS.AUTH.REFRESH
     );
 
     if (response.data.access_token) {
@@ -68,13 +52,14 @@ class AuthService {
   }
 
   async getMyProfile(): Promise<UserResponse> {
-    const response = await apiClient.get<UserResponse>("/api/v1/auth/profile");
+    const response = await apiClient.get<UserResponse>(API_ENDPOINTS.USERS.ME);
     return response.data;
   }
 
   async autoRefreshToken(): Promise<void> {
     try {
-      const token = this.getStoredToken();
+      // const token = this.getStoredToken();
+      const token = LocalStorage.getItem<string>("auth_token");
       if (!token) return;
 
       const payload = this.parseJWTPayload(token);
@@ -111,7 +96,8 @@ class AuthService {
 
   // Get user info from stored token
   getUserFromToken(): { userID: string; role: string } | null {
-    const token = this.getStoredToken();
+    // const token = this.getStoredToken();
+    const token = LocalStorage.getItem<string>("auth_token");
     if (!token) return null;
 
     const payload = this.parseJWTPayload(token);
@@ -136,18 +122,19 @@ class AuthService {
   // Helper methods
   private setAuthToken(token: string) {
     apiClient.setAuthToken(token);
-    localStorage.setItem("auth_token", token);
+    LocalStorage.setItem("auth_token", token);
   }
 
   private removeAuthToken() {
     apiClient.clearAuthToken();
-    localStorage.removeItem("auth_token");
-    localStorage.removeItem("user");
+    LocalStorage.removeItem("auth_token");
+    LocalStorage.removeItem("user");
   }
 
   // Check if user is authenticated
   isAuthenticated(): boolean {
-    const token = this.getStoredToken();
+    // const token = this.getStoredToken();
+    const token = LocalStorage.getItem<string>("auth_token");
     if (!token) return false;
 
     const payload = this.parseJWTPayload(token);
@@ -157,16 +144,24 @@ class AuthService {
     return payload.exp > currentTime;
   }
 
-  getStoredToken(): string | null {
-    return localStorage.getItem("auth_token");
-  }
+  // getStoredToken(): string | null {
+  //   if (typeof window === "undefined") {
+  //     return null;
+  //   }
+  //   return localStorage.getItem("auth_token");
+  // }
 
   // Initialize auth state from storage dan setup auto refresh
   initializeAuth(): void {
-    const token = this.getStoredToken();
+    // Only initialize in browser environment
+    if (typeof window === "undefined") {
+      return;
+    }
+
+    // const token = this.getStoredToken();
+    const token = LocalStorage.getItem<string>("auth_token");
     if (token && this.isAuthenticated()) {
       apiClient.setAuthToken(token);
-
       this.setupAutoRefresh();
     } else {
       this.removeAuthToken();

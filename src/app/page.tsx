@@ -25,9 +25,10 @@ export default function HomePage() {
               </span>
             </div>
             <div className="flex items-center space-x-4 text-xs font-mono text-gray-500">
-              <span>STATUS: ONLINE</span>
-              <span>USERS: 1,247</span>
-              <span>UPTIME: 99.9%</span>
+              <span>
+                STATUS: <span className="text-green-400">ONLINE</span>
+              </span>
+              <span>USERS: 1</span>
             </div>
           </div>
         </div>
@@ -49,9 +50,8 @@ export default function HomePage() {
               <span className="text-green-400">$</span> ./initialize_platform.sh
             </p>
             <p className="text-gray-400 font-mono mt-2">
-              Advanced discussion protocol enabling secure thread creation,
-              <br />
-              real-time interaction modules, and quantum voting algorithms.
+              Agora is a modern platform that allows users to create discussion
+              threads, interact through posts, and vote on content.
             </p>
           </div>
         </div>
@@ -60,19 +60,15 @@ export default function HomePage() {
         <div className="grid grid-cols-3 gap-4 max-w-2xl mx-auto">
           <div className="bg-gray-800/40 backdrop-blur-sm border border-blue-500/30 rounded-lg p-4">
             <div className="text-blue-400 text-sm font-mono">THREADS</div>
-            <div className="text-2xl font-bold text-white font-mono">1,847</div>
+            <div className="text-2xl font-bold text-white font-mono">0</div>
           </div>
           <div className="bg-gray-800/40 backdrop-blur-sm border border-green-500/30 rounded-lg p-4">
             <div className="text-green-400 text-sm font-mono">POSTS</div>
-            <div className="text-2xl font-bold text-white font-mono">
-              12,394
-            </div>
+            <div className="text-2xl font-bold text-white font-mono">0</div>
           </div>
           <div className="bg-gray-800/40 backdrop-blur-sm border border-purple-500/30 rounded-lg p-4">
             <div className="text-purple-400 text-sm font-mono">VOTES</div>
-            <div className="text-2xl font-bold text-white font-mono">
-              89,246
-            </div>
+            <div className="text-2xl font-bold text-white font-mono">0</div>
           </div>
         </div>
 
@@ -132,15 +128,15 @@ export default function HomePage() {
                 <div className="flex flex-col sm:flex-row gap-4 justify-center">
                   <Link
                     href={ROUTES.AUTH.LOGIN}
-                    className="px-6 py-3 bg-gradient-to-r from-blue-500 to-green-600 text-gray-900 rounded-lg font-mono font-bold hover:from-blue-400 hover:to-green-500 focus:outline-none focus:ring-4 focus:ring-blue-500/20 transition-all duration-300 shadow-lg shadow-blue-500/25 hover:shadow-xl hover:shadow-blue-500/40 transform hover:-translate-y-0.5"
+                    className="px-6 py-3 bg-gradient-to-r from-blue-500 to-blue-900 text-white-400 rounded-lg font-mono font-bold hover:from-blue-700 hover:to-blue-900 focus:outline-none focus:ring-4 focus:ring-blue-500/20 transition-all duration-300 shadow-lg shadow-blue-500/25 hover:shadow-xl hover:shadow-blue-500/40 transform hover:-translate-y-0.5"
                   >
-                    $ AUTHENTICATE
+                    $ cd login
                   </Link>
                   <Link
                     href={ROUTES.AUTH.REGISTER}
-                    className="px-6 py-3 border-2 border-blue-500/50 text-blue-400 rounded-lg font-mono font-bold hover:bg-blue-500/10 hover:border-blue-400 focus:outline-none focus:ring-4 focus:ring-blue-500/20 transition-all duration-300 backdrop-blur-sm"
+                    className="px-6 py-3 border-2 border-blue-500/50 text-white-400 rounded-lg font-mono font-bold hover:bg-blue-500/10 hover:border-blue-400 focus:outline-none focus:ring-4 focus:ring-blue-500/20 transition-all duration-300 backdrop-blur-sm"
                   >
-                    $ CREATE_ACCOUNT
+                    $ cd register
                   </Link>
                 </div>
               </div>
@@ -152,17 +148,13 @@ export default function HomePage() {
         <div className="mt-12 pt-8 border-t border-gray-700/50">
           <div className="flex justify-center space-x-8 text-xs font-mono text-gray-500">
             <span>VERSION: 0.0.1</span>
-            <span>BUILD: STABLE</span>
-            <span>SECURITY: QUANTUM_ENCRYPTED</span>
+            <span>BUILD: DEV</span>
           </div>
         </div>
       </div>
 
       {/* Floating Cyber Elements */}
-      <div
-        className="absolute top-1/4 left-10 w-4 h-4 border border-blue-500/50 rotate-45 animate-spin"
-        style={{ animationDuration: "8s" }}
-      ></div>
+      <div className="absolute top-1/4 left-10 w-4 h-4 border border-blue-500/50 rotate-45 animate-spin [animation-duration:8s]"></div>
       <div className="absolute top-3/4 right-16 w-6 h-6 border border-green-500/30 animate-bounce"></div>
       <div className="absolute bottom-1/4 left-1/4 w-2 h-8 bg-gradient-to-t from-cyan-500/20 to-transparent animate-pulse"></div>
     </main>
