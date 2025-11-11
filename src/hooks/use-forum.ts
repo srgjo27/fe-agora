@@ -17,9 +17,8 @@ interface UseThreadsReturn {
 export function useThreads(params: PaginationParams): UseThreadsReturn {
   const [threads, setThreads] = useState<ThreadSummaryResponse[] | null>(null);
   const [meta, setMeta] = useState<PaginationMeta | null>(null);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
-
   const { page, limit } = params;
 
   const fetchThreads = async () => {
@@ -32,7 +31,7 @@ export function useThreads(params: PaginationParams): UseThreadsReturn {
       setThreads(response.data);
       setMeta(response.meta);
     } catch (error: any) {
-      setError(error.message || "gagal mengambil data thread");
+      setError(error.message || "Gagal mengambil data thread");
     } finally {
       setIsLoading(false);
     }
@@ -75,7 +74,7 @@ export function useThreadById(threadId: string): UseThreadByIdReturn {
       const response = await forumService.getThreadById(threadId);
       setThread(response);
     } catch (error: any) {
-      setError(error.message || "gagal mengambil detail thread");
+      setError(error.message || "Gagal mengambil detail thread");
     } finally {
       setIsLoading(false);
     }

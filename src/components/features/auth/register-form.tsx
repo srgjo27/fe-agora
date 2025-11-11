@@ -14,11 +14,11 @@ import { useFormValidation } from "@/hooks";
 import { RegisterRequest } from "@/types";
 import {
   ErrorMessage,
-  RegisterSubmitButton,
   RegisterFormDivider,
   SocialLoginSection,
   RegisterFormFooter,
   FormInput,
+  SubmitButton,
 } from "./components";
 
 export const RegisterForm = () => {
@@ -106,7 +106,7 @@ export const RegisterForm = () => {
           />
         </div>
 
-        <RegisterSubmitButton isLoading={isLoading} />
+        <SubmitButton label="npm run create" isLoading={isLoading} />
       </form>
 
       <RegisterFormDivider />

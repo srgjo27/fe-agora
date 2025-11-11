@@ -93,7 +93,7 @@ export const LoginForm = () => {
         </div>
 
         <FormControls />
-        <SubmitButton isLoading={isLoading} />
+        <SubmitButton label="npm run auth" isLoading={isLoading} />
         <FormDivider />
         <SocialLoginSection />
         <FormFooter />

@@ -34,8 +34,10 @@ export default function ForumPage() {
   if (error) {
     return (
       <PageError
+        title="Thread not found"
         error={error}
-        mainButton={{ label: "retry()", onClick: refetch, variant: "outline" }}
+        buttonLabel="Retry"
+        onButtonClick={refetch}
       />
     );
   }

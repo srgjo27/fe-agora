@@ -58,7 +58,7 @@ export default function RegisterPage() {
             {/* Login Link */}
             <Link
               href={ROUTES.AUTH.LOGIN}
-              className="px-6 py-2 text-sm font-medium text-green-400 hover:text-green-300 transition-all duration-300 border border-green-500/30 rounded-lg hover:border-green-400/50 hover:bg-green-500/10"
+              className="px-6 py-2 text-xs font-medium text-green-400 hover:text-green-300 transition-all duration-300 border border-green-500/30 rounded-lg hover:border-green-400/50 hover:bg-green-500/10"
             >
               Access Portal →
             </Link>
@@ -72,20 +72,20 @@ export default function RegisterPage() {
         <div className="hidden lg:flex lg:w-1/2 flex-col justify-center px-12 xl:px-16">
           <div className="max-w-lg">
             {/* Status Badge */}
-            <div className="inline-flex items-center px-4 py-2 bg-gray-800/60 rounded-lg text-green-400 text-sm font-mono mb-8 border border-green-500/30 shadow-lg shadow-green-500/10">
+            <div className="inline-flex items-center px-4 py-2 bg-gray-800/60 rounded-lg text-green-400 text-xs font-mono mb-8 border border-green-500/30 shadow-lg shadow-green-500/10">
               <div className="w-2 h-2 bg-green-400 rounded-full mr-3 animate-pulse"></div>
               SYSTEM_STATUS: ONLINE
             </div>
 
             {/* Main Heading */}
-            <h1 className="text-5xl xl:text-6xl font-bold text-white leading-tight mb-6 font-mono">
+            <h1 className="text-4xl xl:text-5xl font-bold text-white leading-tight mb-6 font-mono">
               <span className="text-green-400">&gt;</span> INITIALIZE
               <span className="block text-blue-400 mt-2">
                 DEVELOPER_PROTOCOL
               </span>
             </h1>
 
-            <p className="text-xl text-gray-300 mb-12 leading-relaxed">
+            <p className="text-base text-gray-300 mb-12 leading-relaxed">
               Access the neural network of elite developers. Connect, learn, and
               evolve in the digital ecosystem.
             </p>
@@ -119,7 +119,7 @@ export default function RegisterPage() {
                       <div className="text-white font-mono font-bold group-hover:text-green-400 transition-colors">
                         {item.cmd}
                       </div>
-                      <div className="text-gray-400 text-sm">{item.desc}</div>
+                      <div className="text-gray-400 text-xs">{item.desc}</div>
                     </div>
                   </div>
                 </div>
@@ -142,7 +142,7 @@ export default function RegisterPage() {
                   </div>
                 </div>
               </div>
-              <p className="text-gray-300 font-mono text-sm">
+              <p className="text-gray-300 font-mono text-xs">
                 "Connection established. The collective intelligence grows
                 stronger with each new node. Welcome to the future."
               </p>

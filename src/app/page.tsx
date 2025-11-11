@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useAppDispatch, useAuthSelector, logoutUser } from "@/store";
 import { ROUTES } from "@/constants";
+import { capitalize } from "@/lib/utils";
 
 export default function HomePage() {
   const dispatch = useAppDispatch();
@@ -90,21 +91,21 @@ export default function HomePage() {
                   </span>
                   <br />
                   <span className="text-xs text-gray-500">
-                    Security clearance: LEVEL_USER
+                    Security clearance: {capitalize(user.role)}
                   </span>
                 </p>
                 <div className="flex flex-col sm:flex-row gap-4 justify-center">
                   <Link
-                    href={ROUTES.DASHBOARD.HOME}
-                    className="px-6 py-3 bg-gradient-to-r from-blue-500 to-green-600 text-gray-900 rounded-lg font-mono font-bold hover:from-blue-400 hover:to-green-500 focus:outline-none focus:ring-4 focus:ring-blue-500/20 transition-all duration-300 shadow-lg shadow-blue-500/25 hover:shadow-xl hover:shadow-blue-500/40 transform hover:-translate-y-0.5"
+                    href="#"
+                    className="px-6 py-3 bg-green-600 text-white rounded-lg font-mono font-bold hover:bg-green-500 focus:outline-none focus:ring-4 focus:ring-green-500/20 transition-all duration-300 transform hover:-translate-y-0.5"
                   >
-                    $ ACCESS_DASHBOARD
+                    $ cd dashboard
                   </Link>
                   <button
                     onClick={() => dispatch(logoutUser())}
                     className="px-6 py-3 border-2 border-red-500/50 text-red-400 rounded-lg font-mono font-bold hover:bg-red-500/10 hover:border-red-400 focus:outline-none focus:ring-4 focus:ring-red-500/20 transition-all duration-300 backdrop-blur-sm"
                   >
-                    $ TERMINATE_SESSION
+                    $ ctrl + c
                   </button>
                 </div>
               </div>
@@ -128,7 +129,7 @@ export default function HomePage() {
                 <div className="flex flex-col sm:flex-row gap-4 justify-center">
                   <Link
                     href={ROUTES.AUTH.LOGIN}
-                    className="px-6 py-3 bg-gradient-to-r from-blue-500 to-blue-900 text-white-400 rounded-lg font-mono font-bold hover:from-blue-700 hover:to-blue-900 focus:outline-none focus:ring-4 focus:ring-blue-500/20 transition-all duration-300 shadow-lg shadow-blue-500/25 hover:shadow-xl hover:shadow-blue-500/40 transform hover:-translate-y-0.5"
+                    className="px-6 py-3 bg-blue-700 text-white rounded-lg font-mono font-bold hover:bg-blue-600 focus:outline-none focus:ring-4 focus:ring-blue-500/20 transition-all duration-300  transform hover:-translate-y-0.5"
                   >
                     $ cd login
                   </Link>

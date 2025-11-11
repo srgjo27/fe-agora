@@ -32,13 +32,10 @@ export default function ForumDetailPage({ params }: ForumDetailPageProps) {
   if (error) {
     return (
       <PageError
-        error={error}
-        mainButton={{ label: "retry()", onClick: refetch, variant: "outline" }}
-        secondaryButton={{
-          label: "back()",
-          onClick: handleBack,
-          variant: "outline",
-        }}
+        title="Thread not found"
+        error="This thread may have been deleted or moved. Please check the URL and try again."
+        buttonLabel="Back to forum"
+        onButtonClick={() => router.push("/forum")}
       />
     );
   }

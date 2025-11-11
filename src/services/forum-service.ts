@@ -36,15 +36,15 @@ class ForumService {
   ): Promise<PaginatedResponse<ThreadSummaryResponse>> {
     const response = await apiClient.get<
       PaginatedResponse<ThreadSummaryResponse>
-    >(API_ENDPOINTS.FORUM.THREADS, { params });
+    >(API_ENDPOINTS.FORUM.THREADS, params);
 
     return response.data;
   }
 
   async getThreadById(threadId: string): Promise<ThreadDetailResponse> {
-    const endpoint = API_ENDPOINTS.FORUM.THREAD_DETAIL(threadId);
-
-    const response = await apiClient.get<ThreadDetailResponse>(endpoint);
+    const response = await apiClient.get<ThreadDetailResponse>(
+      API_ENDPOINTS.FORUM.THREAD_DETAIL(threadId)
+    );
 
     return response.data;
   }

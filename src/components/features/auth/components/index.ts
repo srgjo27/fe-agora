@@ -8,6 +8,5 @@ export { FormFooter } from "./form-footer";
 export { FormControls } from "./form-controls";
 
 // Register-specific components
-export { RegisterSubmitButton } from "./register-submit-button";
 export { RegisterFormDivider } from "./register-form-divider";
 export { RegisterFormFooter } from "./register-form-footer";
