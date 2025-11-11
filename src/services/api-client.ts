@@ -43,10 +43,6 @@ class ApiClient {
 
             if (refreshResponse.data.access_token) {
               this.setAuthToken(refreshResponse.data.access_token);
-              localStorage.setItem(
-                "auth_token",
-                refreshResponse.data.access_token
-              );
 
               originalRequest.headers.Authorization = `Bearer ${refreshResponse.data.access_token}`;
 
@@ -54,8 +50,6 @@ class ApiClient {
             }
           } catch (refreshError) {
             this.clearAuthToken();
-            localStorage.removeItem("auth_token");
-            localStorage.removeItem("user");
 
             if (typeof window !== "undefined") {
               window.location.href = "/login";

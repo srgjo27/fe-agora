@@ -1,5 +1,4 @@
 // Local storage utilities dengan error handling
-
 class LocalStorage {
   // Check if we're in browser environment
   private static isBrowser(): boolean {
@@ -13,13 +12,12 @@ class LocalStorage {
     }
 
     try {
-      const serializedValue = JSON.stringify(value);
+      const serializedValue =
+        typeof value === "string" ? value : JSON.stringify(value);
       localStorage.setItem(key, serializedValue);
 
       return true;
     } catch (error) {
-      console.error("error saving to localStorage:", error);
-
       return false;
     }
   }
@@ -35,8 +33,6 @@ class LocalStorage {
 
       return item ? JSON.parse(item) : defaultValue || null;
     } catch (error) {
-      console.error("error reading from localStorage:", error);
-
       return defaultValue || null;
     }
   }
@@ -49,10 +45,9 @@ class LocalStorage {
 
     try {
       localStorage.removeItem(key);
+
       return true;
     } catch (error) {
-      console.error("error removing from localStorage:", error);
-
       return false;
     }
   }
@@ -65,9 +60,9 @@ class LocalStorage {
 
     try {
       localStorage.clear();
+
       return true;
     } catch (error) {
-      console.error("error clearing localStorage:", error);
       return false;
     }
   }
@@ -77,6 +72,7 @@ class LocalStorage {
     if (!this.isBrowser()) {
       return false;
     }
+
     return localStorage.getItem(key) !== null;
   }
 
@@ -91,6 +87,7 @@ class LocalStorage {
       const key = localStorage.key(i);
       if (key) keys.push(key);
     }
+
     return keys;
   }
 }
@@ -110,11 +107,12 @@ class SessionStorage {
     }
 
     try {
-      const serializedValue = JSON.stringify(value);
+      const serializedValue =
+        typeof value === "string" ? value : JSON.stringify(value);
       sessionStorage.setItem(key, serializedValue);
+
       return true;
     } catch (error) {
-      console.error("error saving to sessionStorage:", error);
       return false;
     }
   }
@@ -126,9 +124,9 @@ class SessionStorage {
 
     try {
       const item = sessionStorage.getItem(key);
+
       return item ? JSON.parse(item) : defaultValue || null;
     } catch (error) {
-      console.error("error reading from sessionStorage:", error);
       return defaultValue || null;
     }
   }
@@ -140,9 +138,9 @@ class SessionStorage {
 
     try {
       sessionStorage.removeItem(key);
+
       return true;
     } catch (error) {
-      console.error("error removing from sessionStorage:", error);
       return false;
     }
   }
@@ -153,8 +151,6 @@ class SessionStorage {
 
       return true;
     } catch (error) {
-      console.error("error clearing sessionStorage:", error);
-
       return false;
     }
   }

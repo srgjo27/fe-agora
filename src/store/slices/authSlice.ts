@@ -39,8 +39,7 @@ export const loginUser = createAsyncThunk(
         } as User,
       };
     } catch (error: any) {
-      const errorMessage =
-        error?.message || error?.data?.error || "Login failed";
+      const errorMessage = error?.message;
 
       return rejectWithValue(errorMessage);
     }
@@ -62,8 +61,7 @@ export const registerUser = createAsyncThunk(
         created_at: userResponse.created_at,
       } as User;
     } catch (error: any) {
-      const errorMessage =
-        error?.message || error?.data?.error || "Registration failed";
+      const errorMessage = error?.message;
 
       return rejectWithValue(errorMessage);
     }
@@ -73,9 +71,7 @@ export const registerUser = createAsyncThunk(
 export const logoutUser = createAsyncThunk("auth/logout", async (_, {}) => {
   try {
     await authService.logout();
-  } catch (error: any) {
-    console.error("Logout error:", error);
-  }
+  } catch (_) {}
 });
 
 export const refreshToken = createAsyncThunk(
@@ -83,9 +79,11 @@ export const refreshToken = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       const response = await authService.refreshToken();
+
       return response.access_token;
     } catch (error: any) {
-      const errorMessage = error?.message || "Token refresh failed";
+      const errorMessage = error?.message;
+
       return rejectWithValue(errorMessage);
     }
   }
@@ -108,16 +106,17 @@ const authSlice = createSlice({
       state.isAuthenticated = !!action.payload;
     },
     initializeAuth: (state) => {
-      const storedToken = LocalStorage.getItem<string>("auth_token");
-      if (storedToken && authService.isAuthenticated()) {
-        authService.initializeAuth();
+      // Jika sudah ada token di state (dari persist), gunakan itu
+      if (state.token && authService.isAuthenticated(state.token)) {
+        authService.initializeAuth(state.token);
 
-        const userInfo = authService.getUserFromToken();
-        if (userInfo) {
-          state.token = storedToken;
+        const userInfo = authService.getUserFromToken(state.token);
+        if (userInfo && !state.user) {
+          // Hanya update user info jika belum ada
           state.isAuthenticated = true;
         }
       } else {
+        // Reset state jika token tidak valid
         state.user = null;
         state.token = null;
         state.isAuthenticated = false;

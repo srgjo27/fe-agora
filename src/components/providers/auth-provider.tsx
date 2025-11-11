@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
-import { useAppDispatch, initializeAuth } from "@/store";
+import { useAppDispatch, initializeAuth, useAuthSelector } from "@/store";
 
 interface AuthProviderProps {
   children: React.ReactNode;
@@ -9,10 +9,16 @@ interface AuthProviderProps {
 
 export const AuthProvider = ({ children }: AuthProviderProps) => {
   const dispatch = useAppDispatch();
+  const { token } = useAuthSelector();
 
   useEffect(() => {
-    dispatch(initializeAuth());
-  }, [dispatch]);
+    // Delay sedikit untuk memastikan persist sudah selesai rehydrate
+    const timer = setTimeout(() => {
+      dispatch(initializeAuth());
+    }, 100);
+
+    return () => clearTimeout(timer);
+  }, [dispatch, token]);
 
   return <>{children}</>;
 };

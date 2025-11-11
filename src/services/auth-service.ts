@@ -7,59 +7,56 @@ import {
   RegisterRequest,
   UserResponse,
 } from "@/types";
-import { LocalStorage } from "@/utils";
 
 class AuthService {
   async login(credentials: LoginRequest): Promise<LoginResponse> {
-    const response = await apiClient.post<LoginResponse>(
-      API_ENDPOINTS.AUTH.LOGIN,
-      credentials
-    );
+    const endpoint = API_ENDPOINTS.AUTH.LOGIN;
+    const response = await apiClient.post<LoginResponse>(endpoint, credentials);
 
     if (response.data.access_token) {
-      this.setAuthToken(response.data.access_token);
+      apiClient.setAuthToken(response.data.access_token);
     }
 
     return response.data;
   }
 
   async register(userData: RegisterRequest): Promise<UserResponse> {
-    const response = await apiClient.post<UserResponse>(
-      API_ENDPOINTS.AUTH.REGISTER,
-      userData
-    );
+    const endpoint = API_ENDPOINTS.AUTH.REGISTER;
+    const response = await apiClient.post<UserResponse>(endpoint, userData);
+
     return response.data;
   }
 
   async logout(): Promise<void> {
     try {
-      await apiClient.post(API_ENDPOINTS.AUTH.LOGOUT);
+      const endpoint = API_ENDPOINTS.AUTH.LOGOUT;
+      await apiClient.post(endpoint);
     } finally {
       this.removeAuthToken();
     }
   }
 
   async refreshToken(): Promise<LoginResponse> {
-    const response = await apiClient.post<LoginResponse>(
-      API_ENDPOINTS.AUTH.REFRESH
-    );
+    const endpoint = API_ENDPOINTS.AUTH.REFRESH;
+    const response = await apiClient.post<LoginResponse>(endpoint);
 
     if (response.data.access_token) {
-      this.setAuthToken(response.data.access_token);
+      apiClient.setAuthToken(response.data.access_token);
     }
 
     return response.data;
   }
 
   async getMyProfile(): Promise<UserResponse> {
-    const response = await apiClient.get<UserResponse>(API_ENDPOINTS.USERS.ME);
+    const endpoint = API_ENDPOINTS.USERS.ME;
+    const response = await apiClient.get<UserResponse>(endpoint);
+
     return response.data;
   }
 
-  async autoRefreshToken(): Promise<void> {
+  async autoRefreshToken(currentToken?: string): Promise<void> {
     try {
-      // const token = this.getStoredToken();
-      const token = LocalStorage.getItem<string>("auth_token");
+      const token = currentToken || this.getStoredToken();
       if (!token) return;
 
       const payload = this.parseJWTPayload(token);
@@ -72,7 +69,6 @@ class AuthService {
         await this.refreshToken();
       }
     } catch (error) {
-      console.error("Auto refresh token failed:", error);
       this.removeAuthToken();
     }
   }
@@ -88,6 +84,7 @@ class AuthService {
           .map((c) => "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2))
           .join("")
       );
+
       return JSON.parse(jsonPayload);
     } catch (error) {
       return null;
@@ -95,9 +92,10 @@ class AuthService {
   }
 
   // Get user info from stored token
-  getUserFromToken(): { userID: string; role: string } | null {
-    // const token = this.getStoredToken();
-    const token = LocalStorage.getItem<string>("auth_token");
+  getUserFromToken(
+    currentToken?: string
+  ): { userID: string; role: string } | null {
+    const token = currentToken || this.getStoredToken();
     if (!token) return null;
 
     const payload = this.parseJWTPayload(token);
@@ -111,57 +109,63 @@ class AuthService {
 
   isAdmin(): boolean {
     const user = this.getUserFromToken();
+
     return user?.role === "admin";
   }
 
   isMember(): boolean {
     const user = this.getUserFromToken();
-    return user?.role === "member";
-  }
 
-  // Helper methods
-  private setAuthToken(token: string) {
-    apiClient.setAuthToken(token);
-    LocalStorage.setItem("auth_token", token);
+    return user?.role === "member";
   }
 
   private removeAuthToken() {
     apiClient.clearAuthToken();
-    LocalStorage.removeItem("auth_token");
-    LocalStorage.removeItem("user");
+  }
+
+  // Get stored token - dapat menerima token dari parameter atau dari persist
+  private getStoredToken(): string | null {
+    if (typeof window === "undefined") {
+      return null;
+    }
+
+    // Coba ambil dari persist:auth di localStorage
+    try {
+      const persistedAuth = localStorage.getItem("persist:auth");
+      if (persistedAuth) {
+        const authData = JSON.parse(persistedAuth);
+        const token = JSON.parse(authData.token);
+        return token;
+      }
+    } catch (_) {}
+
+    return null;
   }
 
   // Check if user is authenticated
-  isAuthenticated(): boolean {
-    // const token = this.getStoredToken();
-    const token = LocalStorage.getItem<string>("auth_token");
+  isAuthenticated(currentToken?: string): boolean {
+    const token = currentToken || this.getStoredToken();
     if (!token) return false;
 
     const payload = this.parseJWTPayload(token);
     if (!payload || !payload.exp) return false;
 
     const currentTime = Math.floor(Date.now() / 1000);
+
     return payload.exp > currentTime;
   }
 
-  // getStoredToken(): string | null {
-  //   if (typeof window === "undefined") {
-  //     return null;
-  //   }
-  //   return localStorage.getItem("auth_token");
-  // }
-
   // Initialize auth state from storage dan setup auto refresh
-  initializeAuth(): void {
+  initializeAuth(token?: string): void {
     // Only initialize in browser environment
     if (typeof window === "undefined") {
       return;
     }
 
-    // const token = this.getStoredToken();
-    const token = LocalStorage.getItem<string>("auth_token");
-    if (token && this.isAuthenticated()) {
-      apiClient.setAuthToken(token);
+    const authToken = token || this.getStoredToken();
+
+    if (authToken && this.isAuthenticated(authToken)) {
+      apiClient.setAuthToken(authToken);
       this.setupAutoRefresh();
     } else {
       this.removeAuthToken();
