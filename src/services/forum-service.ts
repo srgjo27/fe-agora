@@ -6,6 +6,7 @@ import {
   CategoryRequest,
   PaginatedResponse,
   ThreadDetailResponse,
+  PostResponse,
 } from "@/types";
 
 export interface PaginationParams {
@@ -44,6 +45,16 @@ class ForumService {
   async getThreadById(threadId: string): Promise<ThreadDetailResponse> {
     const response = await apiClient.get<ThreadDetailResponse>(
       API_ENDPOINTS.FORUM.THREAD_DETAIL(threadId)
+    );
+
+    return response.data;
+  }
+
+  async getPostsByThreadId(
+    threadId: string
+  ): Promise<PaginatedResponse<PostResponse>> {
+    const response = await apiClient.get<PaginatedResponse<PostResponse>>(
+      API_ENDPOINTS.FORUM.POSTS(threadId)
     );
 
     return response.data;

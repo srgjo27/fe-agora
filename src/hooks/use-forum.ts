@@ -3,18 +3,22 @@ import {
   ThreadSummaryResponse,
   ThreadDetailResponse,
   PaginationMeta,
+  PostResponse,
 } from "@/types";
+import { set } from "date-fns";
 import { useEffect, useState } from "react";
 
-interface UseThreadsReturn {
-  threads: ThreadSummaryResponse[] | null;
-  meta: PaginationMeta | null;
+interface UseForumReturn {
+  threads?: ThreadSummaryResponse[] | null;
+  thread?: ThreadDetailResponse | null;
+  posts?: PostResponse[] | null;
+  meta?: PaginationMeta | null;
   isLoading: boolean;
   error: string | null;
-  refetch: () => void;
+  refetch?: () => void;
 }
 
-export function useThreads(params: PaginationParams): UseThreadsReturn {
+export function useThreads(params: PaginationParams): UseForumReturn {
   const [threads, setThreads] = useState<ThreadSummaryResponse[] | null>(null);
   const [meta, setMeta] = useState<PaginationMeta | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -50,14 +54,7 @@ export function useThreads(params: PaginationParams): UseThreadsReturn {
   };
 }
 
-interface UseThreadByIdReturn {
-  thread: ThreadDetailResponse | null;
-  isLoading: boolean;
-  error: string | null;
-  refetch: () => void;
-}
-
-export function useThreadById(threadId: string): UseThreadByIdReturn {
+export function useThreadById(threadId: string): UseForumReturn {
   const [thread, setThread] = useState<ThreadDetailResponse | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
@@ -89,5 +86,44 @@ export function useThreadById(threadId: string): UseThreadByIdReturn {
     isLoading,
     error,
     refetch: fetchThread,
+  };
+}
+
+export function usePostsByThreadId(threadId: string): UseForumReturn {
+  const [posts, setPosts] = useState<PostResponse[] | null>(null);
+  const [meta, setMeta] = useState<PaginationMeta | null>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
+
+  const fetchPosts = async () => {
+    if (!threadId) {
+      return;
+    }
+
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      const response = await forumService.getPostsByThreadId(threadId);
+
+      setPosts(response.data);
+      setMeta(response.meta);
+    } catch (error: any) {
+      setError(error.message || "Gagal mengambil data post");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchPosts();
+  }, [threadId]);
+
+  return {
+    posts,
+    meta,
+    isLoading,
+    error,
+    refetch: fetchPosts,
   };
 }

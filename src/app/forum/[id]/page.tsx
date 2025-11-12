@@ -1,13 +1,23 @@
 "use client";
 
 import React from "react";
-import { useThreadById } from "@/hooks/use-forum";
+import { usePostsByThreadId, useThreadById } from "@/hooks/use-forum";
 import { useRouter } from "next/navigation";
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { capitalize, formatRelativeTime } from "@/lib/utils";
 import { ROUTES } from "@/constants";
 import { PageError, PageLoading } from "@/components/ui";
+import { useAuthSelector } from "@/store";
+import {
+  ArrowLeftIcon,
+  ClockIcon,
+  ArrowPathIcon,
+  BookmarkIcon,
+  ShareIcon,
+  ChevronUpIcon,
+  ChevronDownIcon,
+  ArrowDownIcon,
+} from "@heroicons/react/24/outline";
 
 interface ForumDetailPageProps {
   params: Promise<{
@@ -17,25 +27,41 @@ interface ForumDetailPageProps {
 
 export default function ForumDetailPage({ params }: ForumDetailPageProps) {
   const { id: threadId } = React.use(params);
-
   const router = useRouter();
-  const { thread, isLoading, error, refetch } = useThreadById(threadId);
+  const { isAuthenticated } = useAuthSelector();
+  const {
+    thread,
+    isLoading: threadLoading,
+    error: threadError,
+    refetch: refetchThread,
+  } = useThreadById(threadId);
+  const {
+    posts,
+    meta,
+    isLoading: postsLoading,
+    error: postsError,
+    refetch: refetchPosts,
+  } = usePostsByThreadId(threadId);
 
   const handleBack = () => {
     router.push(ROUTES.COMMUNITY.FORUM);
   };
 
-  if (isLoading) {
+  if (threadLoading || postsLoading) {
     return <PageLoading />;
   }
 
-  if (error) {
+  if (threadError || postsError) {
     return (
       <PageError
-        title="Thread not found"
-        error="This thread may have been deleted or moved. Please check the URL and try again."
-        buttonLabel="Back to forum"
-        onButtonClick={() => router.push("/forum")}
+        title="Thread Error"
+        error={
+          threadError ||
+          postsError ||
+          "This thread may have been deleted or moved. Please check the URL and try again."
+        }
+        buttonLabel="Back"
+        onButtonClick={handleBack}
       />
     );
   }
@@ -43,15 +69,8 @@ export default function ForumDetailPage({ params }: ForumDetailPageProps) {
   if (!thread) {
     return (
       <div className="min-h-screen bg-gray-900 text-white flex items-center justify-center">
-        <div className="text-center font-mono">
-          <h3 className="text-gray-400 text-lg mb-4">&gt; Thread not found</h3>
-          <Button
-            onClick={handleBack}
-            variant="outline"
-            className="border-gray-500/30 text-gray-400 hover:bg-gray-500/10 font-mono"
-          >
-            &lt; back_to_forum()
-          </Button>
+        <div className="text-center">
+          <h1 className="text-2xl font-mono text-gray-300">Thread not Found</h1>
         </div>
       </div>
     );
@@ -80,20 +99,22 @@ export default function ForumDetailPage({ params }: ForumDetailPageProps) {
         {/* Glitch scanlines */}
         <div className="absolute top-1/4 left-0 w-full h-px bg-gradient-to-r from-transparent via-green-400/50 to-transparent animate-pulse"></div>
         <div className="absolute bottom-1/3 left-0 w-full h-px bg-gradient-to-r from-transparent via-cyan-400/40 to-transparent animate-pulse delay-1500"></div>
-      </div>{" "}
+      </div>
+
       <div className="relative">
         {/* Header background with blur effect */}
         <div className="absolute inset-0 backdrop-blur-2xl bg-gradient-to-r from-gray-900/95 via-gray-800/90 to-gray-900/95 border-b border-gray-700/60"></div>
 
         <div className="relative max-w-7xl mx-auto px-6 py-8">
           {/* Navigation breadcrumb */}
-          <div className="flex items-center space-x-3 mb-6 font-mono text-sm">
+          <div className="flex items-center space-x-3 mb-6 font-mono text-xs">
             <Button
-              onClick={handleBack}
-              variant="ghost"
               className="text-gray-400 hover:text-green-400 hover:bg-gray-800/60 border border-gray-700/50 hover:border-green-500/40 px-4 py-2 transition-all duration-300"
+              variant="ghost"
+              size="sm"
+              onClick={handleBack}
             >
-              <span className="mr-2 text-green-400">←</span>
+              <ArrowLeftIcon className="w-4 h-4 mr-2 text-green-400" />
               forum()
             </Button>
             <span className="text-gray-500">/</span>
@@ -111,7 +132,7 @@ export default function ForumDetailPage({ params }: ForumDetailPageProps) {
               {thread.is_pinned && (
                 <div className="flex items-center space-x-2 px-4 py-2 bg-gradient-to-r from-yellow-500/20 to-orange-500/20 border border-yellow-500/40 rounded-lg backdrop-blur-sm">
                   <div className="w-2 h-2 bg-yellow-400 rounded-full animate-pulse"></div>
-                  <span className="text-yellow-400 font-mono text-sm font-semibold">
+                  <span className="text-yellow-400 font-mono text-xs font-semibold">
                     PINNED
                   </span>
                 </div>
@@ -119,7 +140,7 @@ export default function ForumDetailPage({ params }: ForumDetailPageProps) {
               {thread.is_locked && (
                 <div className="flex items-center space-x-2 px-4 py-2 bg-gradient-to-r from-red-500/20 to-pink-500/20 border border-red-500/40 rounded-lg backdrop-blur-sm">
                   <div className="w-2 h-2 bg-red-400 rounded-full animate-pulse"></div>
-                  <span className="text-red-400 font-mono text-sm font-semibold">
+                  <span className="text-red-400 font-mono text-xs font-semibold">
                     LOCKED
                   </span>
                 </div>
@@ -127,7 +148,7 @@ export default function ForumDetailPage({ params }: ForumDetailPageProps) {
               {thread.category && (
                 <div className="flex items-center space-x-2 px-4 py-2 bg-gradient-to-r from-blue-500/20 to-purple-500/20 border border-blue-500/40 rounded-lg backdrop-blur-sm">
                   <div className="w-2 h-2 bg-blue-400 rounded-full animate-pulse"></div>
-                  <span className="text-blue-400 font-mono text-sm font-semibold">
+                  <span className="text-blue-400 font-mono text-xs font-semibold">
                     {capitalize(thread.category.name)}
                   </span>
                 </div>
@@ -148,7 +169,7 @@ export default function ForumDetailPage({ params }: ForumDetailPageProps) {
               <div className="flex items-center space-x-4">
                 {/* Author avatar */}
                 <div className="relative">
-                  <div className="w-14 h-14 bg-gradient-to-br from-gray-700 to-gray-800 border-2 border-green-500/40 rounded-xl flex items-center justify-center shadow-lg shadow-green-500/20">
+                  <div className="w-12 h-12 bg-gradient-to-br from-gray-700 to-gray-800 border-2 border-green-500/40 rounded-xl flex items-center justify-center shadow-lg shadow-green-500/20">
                     <span className="text-green-400 text-xl font-bold">
                       {thread.author?.username?.charAt(0).toUpperCase() || "A"}
                     </span>
@@ -161,15 +182,15 @@ export default function ForumDetailPage({ params }: ForumDetailPageProps) {
                   <p className="text-lg font-semibold text-green-400 font-mono">
                     @{thread.author?.username || "anonymous"}
                   </p>
-                  <div className="flex items-center space-x-4 text-sm text-gray-400 font-mono">
+                  <div className="flex items-center space-x-4 text-xs text-gray-400 font-mono">
                     <span className="flex items-center">
-                      <span className="mr-1 text-blue-400">⏱</span>
+                      <ClockIcon className="w-3 h-3 mr-1 text-blue-400" />
                       {formatRelativeTime(thread.created_at)}
                     </span>
                     {thread.updated_at &&
                       thread.updated_at !== thread.created_at && (
                         <span className="flex items-center">
-                          <span className="mr-1 text-cyan-400">↻</span>
+                          <ArrowPathIcon className="w-3 h-3 mr-1 text-cyan-400" />
                           updated {formatRelativeTime(thread.updated_at)}
                         </span>
                       )}
@@ -186,7 +207,9 @@ export default function ForumDetailPage({ params }: ForumDetailPageProps) {
                   <div className="text-xs text-gray-500">votes</div>
                 </div>
                 <div className="text-center">
-                  <div className="text-2xl font-bold text-blue-400">0</div>
+                  <div className="text-2xl font-bold text-blue-400">
+                    {posts?.length || 0}
+                  </div>
                   <div className="text-xs text-gray-500">replies</div>
                 </div>
               </div>
@@ -194,6 +217,7 @@ export default function ForumDetailPage({ params }: ForumDetailPageProps) {
           </div>
         </div>
       </div>
+
       {/* Redesigned Main Content */}
       <div className="relative max-w-7xl mx-auto px-6 py-12">
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
@@ -205,9 +229,7 @@ export default function ForumDetailPage({ params }: ForumDetailPageProps) {
                 <div className="text-center space-y-4">
                   {/* Upvote */}
                   <button className="w-full p-4 rounded-xl bg-gray-700/50 hover:bg-green-500/20 border border-gray-600/50 hover:border-green-500/50 transition-all duration-300 group">
-                    <div className="text-3xl text-gray-400 group-hover:text-green-400 transition-colors">
-                      ▲
-                    </div>
+                    <ChevronUpIcon className="w-4 h-4 mx-auto text-gray-400 group-hover:text-green-400 transition-colors" />
                   </button>
 
                   {/* Vote count */}
@@ -230,20 +252,18 @@ export default function ForumDetailPage({ params }: ForumDetailPageProps) {
 
                   {/* Downvote */}
                   <button className="w-full p-4 rounded-xl bg-gray-700/50 hover:bg-red-500/20 border border-gray-600/50 hover:border-red-500/50 transition-all duration-300 group">
-                    <div className="text-3xl text-gray-400 group-hover:text-red-400 transition-colors">
-                      ▼
-                    </div>
+                    <ChevronDownIcon className="w-4 h-4 mx-auto text-gray-400 group-hover:text-red-400 transition-colors" />
                   </button>
                 </div>
 
                 {/* Additional actions */}
                 <div className="mt-6 pt-6 border-t border-gray-700/50 space-y-3">
-                  <button className="w-full p-3 rounded-lg bg-gray-700/30 hover:bg-blue-500/20 border border-gray-600/40 hover:border-blue-500/40 text-gray-400 hover:text-blue-400 font-mono text-sm transition-all duration-300">
-                    <span className="mr-2">🔖</span>
+                  <button className="w-full flex items-center justify-center p-3 rounded-lg bg-gray-700/30 hover:bg-blue-500/20 border border-gray-600/40 hover:border-blue-500/40 text-gray-400 hover:text-blue-400 font-mono text-sm transition-all duration-300">
+                    <BookmarkIcon className="w-4 h-4 mr-2" />
                     bookmark()
                   </button>
-                  <button className="w-full p-3 rounded-lg bg-gray-700/30 hover:bg-purple-500/20 border border-gray-600/40 hover:border-purple-500/40 text-gray-400 hover:text-purple-400 font-mono text-sm transition-all duration-300">
-                    <span className="mr-2">📤</span>
+                  <button className="w-full flex items-center justify-center p-3 rounded-lg bg-gray-700/30 hover:bg-purple-500/20 border border-gray-600/40 hover:border-purple-500/40 text-gray-400 hover:text-purple-400 font-mono text-sm transition-all duration-300">
+                    <ShareIcon className="w-4 h-4 mr-2" />
                     share()
                   </button>
                 </div>
@@ -255,7 +275,7 @@ export default function ForumDetailPage({ params }: ForumDetailPageProps) {
           <div className="lg:col-span-3 order-1 lg:order-2">
             <div className="bg-gradient-to-br from-gray-800/40 to-gray-900/40 backdrop-blur-xl border border-gray-700/60 rounded-2xl shadow-2xl overflow-hidden">
               {/* Content header */}
-              <div className="border-b border-gray-700/50 p-6">
+              <div className="border-b border-gray-700/50 p-4">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center space-x-3">
                     <div className="flex space-x-2">
@@ -267,46 +287,197 @@ export default function ForumDetailPage({ params }: ForumDetailPageProps) {
                       thread_content.md
                     </span>
                   </div>
-                  <div className="flex items-center space-x-4 text-sm text-gray-500 font-mono">
-                    <span>{thread.content.length} chars</span>
-                    <span>•</span>
-                    <span>markdown</span>
-                  </div>
+                  <div className="flex items-center space-x-4 text-sm text-gray-500 font-mono"></div>
                 </div>
               </div>
 
               {/* Thread content */}
               <div className="p-8">
                 <div className="prose prose-invert max-w-none">
-                  <div className="text-gray-200 text-lg leading-relaxed whitespace-pre-wrap font-mono">
+                  <div className="text-gray-200 text-base leading-relaxed whitespace-pre-wrap font-mono">
                     {thread.content}
                   </div>
                 </div>
               </div>
 
               {/* Action footer */}
-              <div className="border-t border-gray-700/50 p-6 bg-gray-800/30">
+              <div className="border-t border-gray-700/50 p-4 bg-gray-800/30">
                 <div className="flex items-center justify-between flex-wrap gap-4">
                   <div className="flex items-center space-x-4">
-                    <button className="flex items-center space-x-2 px-4 py-2 rounded-lg bg-gray-700/50 hover:bg-green-500/20 border border-gray-600/50 hover:border-green-500/50 text-gray-400 hover:text-green-400 font-mono transition-all duration-300">
-                      <span>👍</span>
-                      <span>like()</span>
-                    </button>
-                    <button className="flex items-center space-x-2 px-4 py-2 rounded-lg bg-gray-700/50 hover:bg-blue-500/20 border border-gray-600/50 hover:border-blue-500/50 text-gray-400 hover:text-blue-400 font-mono transition-all duration-300">
-                      <span>💬</span>
-                      <span>reply()</span>
+                    <button
+                      onClick={() => {
+                        const repliesSection =
+                          document.getElementById("replies-section");
+                        repliesSection?.scrollIntoView({ behavior: "smooth" });
+                      }}
+                      className="flex items-center space-x-2 px-4 py-2 rounded-lg bg-gray-700/50 hover:bg-blue-500/20 border border-gray-600/50 hover:border-blue-500/50 text-gray-400 hover:text-blue-400 font-mono transition-all duration-300 hover:scale-105"
+                    >
+                      <ArrowDownIcon className="w-3 h-3" />
+                      <span className="text-xs">
+                        View Replies ({posts?.length || 0})
+                      </span>
                     </button>
                   </div>
 
                   <button
-                    onClick={refetch}
+                    onClick={() => {
+                      refetchThread?.();
+                      refetchPosts?.();
+                    }}
                     className="flex items-center space-x-2 px-4 py-2 rounded-lg bg-gray-700/50 hover:bg-cyan-500/20 border border-gray-600/50 hover:border-cyan-500/50 text-gray-400 hover:text-cyan-400 font-mono transition-all duration-300"
                   >
-                    <span>🔄</span>
-                    <span>refresh()</span>
+                    <ArrowPathIcon className="w-3 h-3" />
+                    <span className="text-sm">refresh()</span>
                   </button>
                 </div>
               </div>
+            </div>
+
+            {/* Replies Section - Simple & Clean */}
+            <div id="replies-section" className="mt-8">
+              {/* Simple Header */}
+              <div className="flex items-center justify-between mb-6 pb-4 border-b border-gray-700/50">
+                <div className="flex items-center space-x-3">
+                  <div className="w-1 h-6 bg-gradient-to-b from-cyan-400 to-blue-500 rounded-full"></div>
+                  <h2 className="text-lg font-mono font-semibold text-cyan-400">
+                    replies/
+                  </h2>
+                  <span className="text-gray-500 font-mono text-sm">
+                    [{posts?.length || 0}]
+                  </span>
+                </div>
+                <button
+                  onClick={() => refetchPosts?.()}
+                  className="text-gray-500 hover:text-cyan-400 transition-colors duration-200"
+                >
+                  <svg
+                    className="w-4 h-4"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+                    />
+                  </svg>
+                </button>
+              </div>
+
+              {/* Content */}
+              {postsLoading ? (
+                <div className="flex items-center justify-center py-12">
+                  <div className="flex items-center space-x-3">
+                    <div className="w-2 h-2 bg-cyan-400 rounded-full animate-ping"></div>
+                    <div className="w-2 h-2 bg-blue-400 rounded-full animate-ping delay-100"></div>
+                    <div className="w-2 h-2 bg-purple-400 rounded-full animate-ping delay-200"></div>
+                    <span className="text-gray-400 font-mono text-sm ml-3">
+                      loading...
+                    </span>
+                  </div>
+                </div>
+              ) : postsError ? (
+                <div className="py-8 text-center">
+                  <div className="text-red-400 font-mono mb-2">
+                    Error: {postsError}
+                  </div>
+                  <Button
+                    onClick={refetchPosts}
+                    className="text-sm bg-red-500/20 hover:bg-red-500/30 border border-red-500/50 text-red-400 font-mono"
+                  >
+                    retry()
+                  </Button>
+                </div>
+              ) : !posts || posts.length === 0 ? (
+                <div className="py-12 text-center">
+                  <div className="text-gray-500 font-mono text-sm mb-4">
+                    // no replies yet
+                  </div>
+                  {isAuthenticated && (
+                    <Button className="bg-cyan-500/20 hover:bg-cyan-500/30 border border-cyan-500/50 text-cyan-400 font-mono text-sm">
+                      + add_reply()
+                    </Button>
+                  )}
+                </div>
+              ) : (
+                <div className="space-y-3">
+                  {posts.map((post, index) => (
+                    <div
+                      key={post.id}
+                      className="border-l-2 border-cyan-500/30 pl-4 py-3 hover:border-cyan-400/50 hover:bg-gray-800/20 rounded-r-lg transition-all duration-200"
+                    >
+                      {/* Reply Header - Compact */}
+                      <div className="flex items-center justify-between mb-3">
+                        <div className="flex items-center space-x-3">
+                          {/* Simple Avatar */}
+                          <div className="w-8 h-8 bg-gradient-to-br from-cyan-500/30 to-blue-500/30 rounded-lg flex items-center justify-center border border-cyan-500/40">
+                            <span className="text-cyan-300 text-sm font-mono font-bold">
+                              {post.author?.username.charAt(0).toUpperCase() ||
+                                "U"}
+                            </span>
+                          </div>
+
+                          {/* User & Meta */}
+                          <div>
+                            <div className="flex items-center space-x-2">
+                              <span className="text-cyan-400 font-mono text-sm font-semibold">
+                                @{post.author?.username || "unknown"}
+                              </span>
+                              <span className="text-gray-600 font-mono text-xs">
+                                #{index + 1}
+                              </span>
+                            </div>
+                            <div className="flex items-center space-x-3 text-xs text-gray-500 font-mono">
+                              <span>{formatRelativeTime(post.created_at)}</span>
+                              {post.updated_at &&
+                                post.updated_at !== post.created_at && (
+                                  <span className="text-cyan-500">edited</span>
+                                )}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Reply Content - Clean */}
+                      <div className="ml-11 mb-3">
+                        <div className="text-gray-200 text-sm leading-relaxed">
+                          {post.content}
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+
+                  {/* Simple Pagination */}
+                  {meta && meta.total_items >= (posts?.length || 0) && (
+                    <div className="mt-4 pt-3 border-t border-gray-700/30 text-center">
+                      <div className="text-gray-500 font-mono text-xs mb-4">
+                        {posts?.length || 0} of {meta.total_items} replies
+                        {meta.current_page <= meta.total_pages &&
+                          ` • page ${meta.current_page}/${meta.total_pages}`}
+                      </div>
+                      {meta.current_page < meta.total_pages && (
+                        <Button
+                          className="bg-cyan-500/20 hover:bg-cyan-500/30 border border-cyan-500/50 text-cyan-400 font-mono text-xs px-4 py-2"
+                          onClick={() => {}}
+                        >
+                          load_more()
+                        </Button>
+                      )}
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {/* Simple Add Reply */}
+              {isAuthenticated && (
+                <div className="mt-4 pt-3 border-t border-gray-700/30 text-center">
+                  <Button className="bg-cyan-500/20 hover:bg-cyan-500/30 border border-cyan-500/50 text-cyan-400 font-mono text-sm px-4 py-2">
+                    + write_reply()
+                  </Button>
+                </div>
+              )}
             </div>
           </div>
         </div>

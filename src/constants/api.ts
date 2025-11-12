@@ -19,9 +19,11 @@ export const API_ENDPOINTS = {
 
     THREADS: "/threads",
     THREAD_DETAIL: (id: string) => `/threads/${id}`,
-    THREAD_CREATE: (id: string) => `/threads`,
+    THREAD_CREATE: `/threads`,
     THREAD_DELETE: (id: string) => `/threads/${id}`,
     THREAD_UPDATE: (id: string) => `/threads/${id}`,
+
+    POSTS: (id: string) => `/threads/${id}/posts`,
   },
 } as const;
 
