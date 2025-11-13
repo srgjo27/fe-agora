@@ -94,7 +94,7 @@ class ForumService {
   async createPost(
     thread_id: string,
     content: string,
-    parent_post_id: string
+    parent_post_id?: string
   ): Promise<PostResponse> {
     const response = await apiClient.post<PostResponse>(
       API_ENDPOINTS.FORUM.POST_CREATE(thread_id),

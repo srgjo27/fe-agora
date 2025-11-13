@@ -1,9 +1,13 @@
 "use client";
 
 import React from "react";
-import { usePostsByThreadId, useThreadById } from "@/hooks/use-forum";
+import {
+  useCreatePost,
+  usePostsByThreadId,
+  useThreadById,
+} from "@/hooks/use-forum";
 import { useRouter } from "next/navigation";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui";
 import { capitalize, formatRelativeTime } from "@/lib/utils";
 import { ROUTES } from "@/constants";
 import { PageError, PageLoading } from "@/components/ui";
@@ -28,12 +32,14 @@ interface ForumDetailPageProps {
 export default function ForumDetailPage({ params }: ForumDetailPageProps) {
   const { id: thread_id } = React.use(params);
   const router = useRouter();
-  const { isAuthenticated } = useAuthSelector();
+  const { user, isAuthenticated } = useAuthSelector();
+  const [showReplyForm, setShowReplyForm] = React.useState(false);
+  const [replyContent, setReplyContent] = React.useState("");
+
   const {
     thread,
     isLoading: threadLoading,
     error: threadError,
-    refetch: refetchThread,
   } = useThreadById(thread_id);
   const {
     posts,
@@ -42,9 +48,28 @@ export default function ForumDetailPage({ params }: ForumDetailPageProps) {
     error: postsError,
     refetch: refetchPosts,
   } = usePostsByThreadId(thread_id);
+  const { createPost, isLoading: isSubmittingReply } = useCreatePost(thread_id);
 
   const handleBack = () => {
     router.push(ROUTES.COMMUNITY.FORUM);
+  };
+
+  const handleSubmitReply = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!replyContent.trim() || isSubmittingReply || !createPost) return;
+
+    const newPost = await createPost(replyContent);
+
+    if (newPost) {
+      setReplyContent("");
+      setShowReplyForm(false);
+      refetchPosts?.();
+    }
+  };
+
+  const handleCancelReply = () => {
+    setShowReplyForm(false);
+    setReplyContent("");
   };
 
   if (threadLoading) {
@@ -416,17 +441,14 @@ export default function ForumDetailPage({ params }: ForumDetailPageProps) {
 
                   {/* Simple Pagination */}
                   {meta && meta.total_items >= (posts?.length || 0) && (
-                    <div className="mt-4 pt-3 border-t border-gray-700/30 text-center">
-                      <div className="text-gray-500 font-mono text-xs mb-4">
+                    <div className="mt-4 pt-4 border-t border-gray-700/30 text-center">
+                      <div className="text-gray-500 font-mono text-xs">
                         {posts?.length || 0} of {meta.total_items} replies
                         {meta.current_page <= meta.total_pages &&
-                          `page ${meta.current_page}/${meta.total_pages}`}
+                          ` | page ${meta.current_page}/${meta.total_pages}`}
                       </div>
                       {meta.current_page < meta.total_pages && (
-                        <Button
-                          className="bg-cyan-500/20 hover:bg-cyan-500/30 border border-cyan-500/50 text-cyan-400 font-mono text-xs px-4 py-2"
-                          onClick={() => {}}
-                        >
+                        <Button className="bg-cyan-500/20 hover:bg-cyan-500/30 border border-cyan-500/50 text-cyan-400 font-mono text-xs px-4 py-2">
                           load_more()
                         </Button>
                       )}
@@ -435,12 +457,110 @@ export default function ForumDetailPage({ params }: ForumDetailPageProps) {
                 </div>
               )}
 
-              {/* Simple Add Reply */}
+              {/* Add Reply Section */}
               {isAuthenticated && (
-                <div className="mt-4 pt-3 border-t border-gray-700/30 text-center">
-                  <Button className="bg-cyan-500/20 hover:bg-cyan-500/30 border border-cyan-500/50 text-cyan-400 font-mono text-sm px-4 py-2">
-                    + write_reply()
-                  </Button>
+                <div className="mt-4 pt-4 border-t border-gray-700/30">
+                  {!showReplyForm ? (
+                    <div className="text-center">
+                      <Button
+                        className="bg-cyan-500/20 hover:bg-cyan-500/30 border border-cyan-500/50 text-cyan-400 font-mono text-sm px-6 py-3 transition-all duration-300 hover:scale-105"
+                        onClick={() => setShowReplyForm(true)}
+                      >
+                        + write_reply()
+                      </Button>
+                    </div>
+                  ) : (
+                    <div className="bg-gradient-to-br from-gray-800/40 to-gray-900/40 backdrop-blur-xl border border-gray-700/60 rounded-2xl shadow-2xl overflow-hidden">
+                      {/* Reply Form Header */}
+                      <div className="border-b border-gray-700/50 p-4">
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center space-x-3">
+                            <div className="flex space-x-2">
+                              <div className="w-3 h-3 bg-red-500 rounded-full"></div>
+                              <div className="w-3 h-3 bg-yellow-500 rounded-full"></div>
+                              <div className="w-3 h-3 bg-green-500 rounded-full"></div>
+                            </div>
+                            <span className="text-cyan-400 font-mono text-sm">
+                              reply_composer.md
+                            </span>
+                          </div>
+                          <div className="flex items-center space-x-2">
+                            <div className="w-2 h-2 bg-cyan-400 rounded-full animate-ping"></div>
+                            <span className="text-gray-500 font-mono text-xs">
+                              composing...
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Reply Form */}
+                      <form onSubmit={handleSubmitReply} className="p-6">
+                        <div className="space-y-4">
+                          {/* User Info */}
+                          <div className="flex items-center space-x-3 mb-4">
+                            <div className="w-8 h-8 bg-gradient-to-br from-cyan-500/30 to-blue-500/30 rounded-lg flex items-center justify-center border border-cyan-500/40">
+                              <span className="text-cyan-300 text-sm font-mono font-bold">
+                                {user?.username
+                                  ? user.username.charAt(0).toUpperCase()
+                                  : "Me"}
+                              </span>
+                            </div>
+                            <div>
+                              <span className="text-cyan-400 font-mono text-sm font-semibold">
+                                @{user?.username || "you"}
+                              </span>
+                              <div className="text-xs text-gray-500 font-mono">
+                                writing a reply...
+                              </div>
+                            </div>
+                          </div>
+
+                          {/* Content Textarea */}
+                          <div className="relative">
+                            <textarea
+                              className="w-full min-h-[120px] bg-gray-800/50 border border-gray-600/50 rounded-lg p-4 text-gray-200 placeholder-gray-500 font-mono text-sm resize-y focus:outline-none focus:ring-2 focus:ring-cyan-500/50 focus:border-cyan-500/50 transition-all duration-300"
+                              value={replyContent}
+                              onChange={(e) => setReplyContent(e.target.value)}
+                              placeholder="// write your reply here..."
+                              disabled={isSubmittingReply}
+                            />
+                            <div className="absolute bottom-3 right-3 text-xs text-gray-500 font-mono">
+                              {replyContent.length}/1000
+                            </div>
+                          </div>
+
+                          {/* Action Buttons */}
+                          <div className="flex items-center justify-between pt-4 border-t border-gray-700/30">
+                            <div className="text-xs text-gray-500 font-mono">
+                              Press{" "}
+                              <span className="text-cyan-400">Ctrl+Enter</span>{" "}
+                              to submit
+                            </div>
+
+                            <div className="flex items-center space-x-3">
+                              <Button
+                                type="button"
+                                className="bg-gray-700/50 hover:bg-red-500/20 border border-gray-600/50 hover:border-red-500/50 text-gray-400 hover:text-red-400 font-mono text-sm px-4 py-2 transition-all duration-300"
+                                onClick={handleCancelReply}
+                                disabled={isSubmittingReply}
+                              >
+                                cancel()
+                              </Button>
+
+                              <Button
+                                type="submit"
+                                className="bg-cyan-500/20 hover:bg-cyan-500/30 border border-cyan-500/50 text-cyan-400 font-mono text-sm px-6 py-2 transition-all duration-300 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
+                                disabled={!replyContent.trim()}
+                                loading={isSubmittingReply}
+                              >
+                                submit_reply()
+                              </Button>
+                            </div>
+                          </div>
+                        </div>
+                      </form>
+                    </div>
+                  )}
                 </div>
               )}
             </div>

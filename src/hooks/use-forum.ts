@@ -15,6 +15,10 @@ interface UseForumReturn {
   isLoading: boolean;
   error: string | null;
   refetch?: () => void;
+  createPost?: (
+    content: string,
+    parent_post_id?: string
+  ) => Promise<PostResponse | null>;
 }
 
 export function useThreads(params: PaginationParams): UseForumReturn {
@@ -124,5 +128,45 @@ export function usePostsByThreadId(thread_id: string): UseForumReturn {
     isLoading,
     error,
     refetch: fetchPosts,
+  };
+}
+
+export function useCreatePost(thread_id: string): UseForumReturn {
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const createPost = async (
+    content: string,
+    parent_post_id?: string
+  ): Promise<PostResponse | null> => {
+    if (!thread_id) {
+      setError("Thread ID tidak valid.");
+      return null;
+    }
+
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      const response = await forumService.createPost(
+        thread_id,
+        content,
+        parent_post_id
+      );
+
+      return response;
+    } catch (error: any) {
+      setError(error.message || "Gagal membuat balasan publik");
+
+      return null;
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  return {
+    createPost,
+    isLoading,
+    error,
   };
 }

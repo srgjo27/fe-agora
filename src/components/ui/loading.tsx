@@ -100,6 +100,3 @@ export const PageLoading = ({ props }: { props?: string }) => (
     </div>
   </div>
 );
-
-// Button loading component
-export const ButtonLoading = () => <Loading size="sm" variant="spinner" />;
