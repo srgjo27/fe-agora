@@ -26,3 +26,9 @@ export interface ThreadDetailResponse {
   created_at: string;
   updated_at?: string;
 }
+
+export interface ThreadRequest {
+  title: string;
+  content: string;
+  category_id: string;
+}

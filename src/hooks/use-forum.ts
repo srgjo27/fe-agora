@@ -5,7 +5,6 @@ import {
   PaginationMeta,
   PostResponse,
 } from "@/types";
-import { set } from "date-fns";
 import { useEffect, useState } from "react";
 
 interface UseForumReturn {
@@ -54,13 +53,13 @@ export function useThreads(params: PaginationParams): UseForumReturn {
   };
 }
 
-export function useThreadById(threadId: string): UseForumReturn {
+export function useThreadById(thread_id: string): UseForumReturn {
   const [thread, setThread] = useState<ThreadDetailResponse | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
   const fetchThread = async () => {
-    if (!threadId) {
+    if (!thread_id) {
       return;
     }
 
@@ -68,7 +67,7 @@ export function useThreadById(threadId: string): UseForumReturn {
     setError(null);
 
     try {
-      const response = await forumService.getThreadById(threadId);
+      const response = await forumService.getThreadById(thread_id);
       setThread(response);
     } catch (error: any) {
       setError(error.message || "Gagal mengambil detail thread");
@@ -79,7 +78,7 @@ export function useThreadById(threadId: string): UseForumReturn {
 
   useEffect(() => {
     fetchThread();
-  }, [threadId]);
+  }, [thread_id]);
 
   return {
     thread,
@@ -89,14 +88,14 @@ export function useThreadById(threadId: string): UseForumReturn {
   };
 }
 
-export function usePostsByThreadId(threadId: string): UseForumReturn {
+export function usePostsByThreadId(thread_id: string): UseForumReturn {
   const [posts, setPosts] = useState<PostResponse[] | null>(null);
   const [meta, setMeta] = useState<PaginationMeta | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
   const fetchPosts = async () => {
-    if (!threadId) {
+    if (!thread_id) {
       return;
     }
 
@@ -104,7 +103,7 @@ export function usePostsByThreadId(threadId: string): UseForumReturn {
     setError(null);
 
     try {
-      const response = await forumService.getPostsByThreadId(threadId);
+      const response = await forumService.getPostsByThreadId(thread_id);
 
       setPosts(response.data);
       setMeta(response.meta);
@@ -117,7 +116,7 @@ export function usePostsByThreadId(threadId: string): UseForumReturn {
 
   useEffect(() => {
     fetchPosts();
-  }, [threadId]);
+  }, [thread_id]);
 
   return {
     posts,

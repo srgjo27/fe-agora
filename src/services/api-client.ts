@@ -15,10 +15,8 @@ class ApiClient {
       withCredentials: true, // Untuk mengirim cookies (refresh token)
     });
 
-    // Request interceptor untuk menambah auth token
     this.axiosInstance.interceptors.request.use(
       (config) => {
-        // Token akan ditambahkan secara otomatis jika sudah di-set
         return config;
       },
       (error) => Promise.reject(error)

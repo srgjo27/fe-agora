@@ -23,8 +23,8 @@ export default function ForumPage() {
   });
   const router = useRouter();
 
-  const handleViewThread = async (threadId: string) => {
-    router.push(ROUTES.COMMUNITY.FORUM_DETAIL(threadId));
+  const handleViewThread = async (thread_id: string) => {
+    router.push(ROUTES.COMMUNITY.FORUM_DETAIL(thread_id));
   };
 
   if (isLoading) {

@@ -12,7 +12,7 @@ interface PageErrorOptions {
 export const PageError = ({
   error,
   title = "Something went wrong",
-  buttonLabel = "Go back",
+  buttonLabel = "Back",
   onButtonClick = () => window.history.back(),
 }: PageErrorOptions) => {
   return (

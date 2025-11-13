@@ -26,7 +26,7 @@ interface ForumDetailPageProps {
 }
 
 export default function ForumDetailPage({ params }: ForumDetailPageProps) {
-  const { id: threadId } = React.use(params);
+  const { id: thread_id } = React.use(params);
   const router = useRouter();
   const { isAuthenticated } = useAuthSelector();
   const {
@@ -34,20 +34,20 @@ export default function ForumDetailPage({ params }: ForumDetailPageProps) {
     isLoading: threadLoading,
     error: threadError,
     refetch: refetchThread,
-  } = useThreadById(threadId);
+  } = useThreadById(thread_id);
   const {
     posts,
     meta,
     isLoading: postsLoading,
     error: postsError,
     refetch: refetchPosts,
-  } = usePostsByThreadId(threadId);
+  } = usePostsByThreadId(thread_id);
 
   const handleBack = () => {
     router.push(ROUTES.COMMUNITY.FORUM);
   };
 
-  if (threadLoading || postsLoading) {
+  if (threadLoading) {
     return <PageLoading />;
   }
 
@@ -318,17 +318,6 @@ export default function ForumDetailPage({ params }: ForumDetailPageProps) {
                       </span>
                     </button>
                   </div>
-
-                  <button
-                    onClick={() => {
-                      refetchThread?.();
-                      refetchPosts?.();
-                    }}
-                    className="flex items-center space-x-2 px-4 py-2 rounded-lg bg-gray-700/50 hover:bg-cyan-500/20 border border-gray-600/50 hover:border-cyan-500/50 text-gray-400 hover:text-cyan-400 font-mono transition-all duration-300"
-                  >
-                    <ArrowPathIcon className="w-3 h-3" />
-                    <span className="text-sm">refresh()</span>
-                  </button>
                 </div>
               </div>
             </div>
@@ -350,19 +339,7 @@ export default function ForumDetailPage({ params }: ForumDetailPageProps) {
                   onClick={() => refetchPosts?.()}
                   className="text-gray-500 hover:text-cyan-400 transition-colors duration-200"
                 >
-                  <svg
-                    className="w-4 h-4"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
-                    />
-                  </svg>
+                  <ArrowPathIcon className="w-3 h-3" />
                 </button>
               </div>
 
@@ -377,18 +354,6 @@ export default function ForumDetailPage({ params }: ForumDetailPageProps) {
                       loading...
                     </span>
                   </div>
-                </div>
-              ) : postsError ? (
-                <div className="py-8 text-center">
-                  <div className="text-red-400 font-mono mb-2">
-                    Error: {postsError}
-                  </div>
-                  <Button
-                    onClick={refetchPosts}
-                    className="text-sm bg-red-500/20 hover:bg-red-500/30 border border-red-500/50 text-red-400 font-mono"
-                  >
-                    retry()
-                  </Button>
                 </div>
               ) : !posts || posts.length === 0 ? (
                 <div className="py-12 text-center">
@@ -455,7 +420,7 @@ export default function ForumDetailPage({ params }: ForumDetailPageProps) {
                       <div className="text-gray-500 font-mono text-xs mb-4">
                         {posts?.length || 0} of {meta.total_items} replies
                         {meta.current_page <= meta.total_pages &&
-                          ` • page ${meta.current_page}/${meta.total_pages}`}
+                          `page ${meta.current_page}/${meta.total_pages}`}
                       </div>
                       {meta.current_page < meta.total_pages && (
                         <Button

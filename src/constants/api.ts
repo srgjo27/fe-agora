@@ -14,9 +14,9 @@ export const API_ENDPOINTS = {
     ME: "/users/me",
   },
 
-  FORUM: {
-    CATEGORIES: "/categories",
+  CATEGORIES: "/categories",
 
+  FORUM: {
     THREADS: "/threads",
     THREAD_DETAIL: (id: string) => `/threads/${id}`,
     THREAD_CREATE: `/threads`,
@@ -24,6 +24,10 @@ export const API_ENDPOINTS = {
     THREAD_UPDATE: (id: string) => `/threads/${id}`,
 
     POSTS: (id: string) => `/threads/${id}/posts`,
+    POST_CREATE: (id: string) => `/threads/${id}/posts`,
+
+    VOTE_ON_THREAD: (id: string) => `/threads/${id}/vote`,
+    VOTE_ON_POST: (id: string) => `/posts/${id}/vote`,
   },
 } as const;
 
