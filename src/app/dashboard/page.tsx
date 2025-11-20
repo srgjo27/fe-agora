@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { useAppDispatch, useAuthSelector, logoutUser } from "@/store";
 import { Card, CardContent } from "@/components/ui";
 import { Input, Button } from "@/components/ui";
+import { AddCategoryModal } from "@/components/features";
 import {
   EyeIcon,
   PencilIcon,
@@ -17,8 +18,10 @@ import {
   ArrowRightOnRectangleIcon,
 } from "@heroicons/react/24/outline";
 import { Shield } from "lucide-react";
-import { dashboardService } from "@/services";
-import { User } from "@/types";
+import { dashboardService, forumService } from "@/services";
+import { CategoryRequest, User } from "@/types";
+import { useThreads } from "@/hooks";
+import { formatRelativeTime } from "@/utils";
 
 export default function AdminDashboard() {
   const dispatch = useAppDispatch();
@@ -28,6 +31,11 @@ export default function AdminDashboard() {
   const [activeTab, setActiveTab] = useState("overview");
   const [searchTerm, setSearchTerm] = useState("");
   const [users, setUsers] = useState<User[] | null>(null);
+  const [isAddCategoryModalOpen, setIsAddCategoryModalOpen] = useState(false);
+  const { threads } = useThreads({
+    page: 1,
+    limit: 10,
+  });
 
   useEffect(() => {
     setIsMounted(true);
@@ -48,6 +56,16 @@ export default function AdminDashboard() {
 
     fetchUsers();
   }, []);
+
+  const handleCreateCategory = async (categoryData: CategoryRequest) => {
+    setIsLoading(true);
+
+    try {
+      await forumService.createCategory(categoryData);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   if (!isMounted) return null;
 
@@ -72,11 +90,12 @@ export default function AdminDashboard() {
     { id: "posts", label: "Posts", icon: DocumentTextIcon },
     { id: "settings", label: "Settings", icon: Cog6ToothIcon },
   ];
+
   const renderUsers = () => (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <h2 className="text-2xl font-bold text-white">User Management</h2>
-        <Button className="bg-blue-600 hover:bg-blue-700">
+        <Button className="bg-blue-600 hover:bg-blue-700" size="sm">
           <PlusIcon className="w-4 h-4 mr-2" />
           Add User
         </Button>
@@ -115,7 +134,7 @@ export default function AdminDashboard() {
               <tbody className="divide-y divide-gray-700/30">
                 {users && users.length === 0 ? (
                   <tr>
-                    <td colSpan={5} className="px-6 py-8 text-center">
+                    <td colSpan={4} className="px-6 py-8 text-center">
                       <div className="text-gray-400">No users found</div>
                     </td>
                   </tr>
@@ -170,6 +189,103 @@ export default function AdminDashboard() {
     </div>
   );
 
+  const renderThreads = () => (
+    <div className="space-y-6">
+      <div className="flex justify-between items-center">
+        <h2 className="text-2xl font-bold text-white">Threads Management</h2>
+        <Button
+          className="bg-blue-600 hover:bg-blue-700"
+          onClick={() => setIsAddCategoryModalOpen(true)}
+          size="sm"
+        >
+          <PlusIcon className="w-4 h-4 mr-2" />
+          Add Category
+        </Button>
+      </div>
+
+      <Card className="bg-gray-800/60 backdrop-blur-sm border-gray-700/50">
+        <CardContent className="p-0">
+          <div className="mb-4 border-b border-gray-700/50">
+            <Input
+              type="text"
+              placeholder="Search threads..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="bg-gray-700/50 border-gray-600 text-white placeholder-gray-400"
+            />
+          </div>
+
+          <div className="overflow-x-auto">
+            <table className="w-full">
+              <thead className="bg-gray-700/30">
+                <tr>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase">
+                    Category
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase">
+                    Title
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase">
+                    Author
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase">
+                    Created At
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase">
+                    Actions
+                  </th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-gray-700/30">
+                {threads && threads.length === 0 ? (
+                  <tr>
+                    <td colSpan={4} className="px-6 py-8 text-center">
+                      <div className="text-gray-400">No threads found</div>
+                    </td>
+                  </tr>
+                ) : (
+                  threads?.map((thread) => (
+                    <tr key={thread.id} className="hover:bg-gray-700/20">
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <span className="px-2 py-1 text-xs font-medium rounded-full text-white bg-blue-400">
+                          {thread.category?.name}
+                        </span>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <span className="px-2 py-1 text-xs font-medium text-gray-400">
+                          {thread.title}
+                        </span>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-400">
+                        {thread.author?.username}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-400">
+                        {formatRelativeTime(thread.created_at)}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm">
+                        <div className="flex space-x-2">
+                          <button className="text-blue-400 hover:text-blue-300">
+                            <EyeIcon className="w-4 h-4" />
+                          </button>
+                          <button className="text-green-400 hover:text-green-300">
+                            <PencilIcon className="w-4 h-4" />
+                          </button>
+                          <button className="text-red-400 hover:text-red-300">
+                            <TrashIcon className="w-4 h-4" />
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))
+                )}
+              </tbody>
+            </table>
+          </div>
+        </CardContent>
+      </Card>
+    </div>
+  );
+
   const renderContent = () => {
     switch (activeTab) {
       case "overview":
@@ -177,7 +293,7 @@ export default function AdminDashboard() {
       case "users":
         return renderUsers();
       case "threads":
-      // return renderThreads();
+        return renderThreads();
       case "posts":
         return (
           <div className="text-gray-400 text-center py-12">
@@ -250,6 +366,14 @@ export default function AdminDashboard() {
           <div className="max-w-7xl mx-auto">{renderContent()}</div>
         </main>
       </div>
+
+      {/* Add Category Modal */}
+      <AddCategoryModal
+        isOpen={isAddCategoryModalOpen}
+        onClose={() => setIsAddCategoryModalOpen(false)}
+        onSubmit={handleCreateCategory}
+        isLoading={isLoading}
+      />
     </div>
   );
 }

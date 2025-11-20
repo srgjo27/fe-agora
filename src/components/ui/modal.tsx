@@ -1,6 +1,5 @@
 "use client";
 
-// Modal/Dialog component
 import { ReactNode, useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
 import { cn } from "@/utils/utils";
@@ -66,19 +65,19 @@ export const Modal = ({
       <div
         ref={modalRef}
         className={cn(
-          "bg-white rounded-lg shadow-xl w-full transform transition-all",
+          "bg-gray-800 rounded-lg shadow-xl w-full transform transition-all border border-gray-700",
           sizes[size]
         )}
       >
         {(title || showCloseButton) && (
-          <div className="flex items-center justify-between p-6 border-b">
+          <div className="flex items-center justify-between p-6 border-b border-gray-700">
             {title && (
-              <h2 className="text-lg font-semibold text-gray-900">{title}</h2>
+              <h2 className="text-lg font-semibold text-white">{title}</h2>
             )}
             {showCloseButton && (
               <button
                 onClick={onClose}
-                className="text-gray-400 hover:text-gray-600 transition-colors"
+                className="text-gray-400 hover:text-gray-300 transition-colors"
               >
                 <svg
                   className="w-6 h-6"
@@ -114,5 +113,7 @@ export const ModalBody = ({ children }: { children: ReactNode }) => (
 );
 
 export const ModalFooter = ({ children }: { children: ReactNode }) => (
-  <div className="flex justify-end space-x-2 pt-4 border-t">{children}</div>
+  <div className="flex justify-end space-x-2 pt-4 border-t border-gray-700">
+    {children}
+  </div>
 );

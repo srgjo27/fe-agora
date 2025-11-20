@@ -67,6 +67,17 @@ export const CommonValidationRules = {
       return null;
     },
   },
+  description: {
+    required: false,
+    minLength: 10,
+    maxLength: 500,
+    custom: (value: string) => {
+      if (value && value.trim().length > 0 && value.trim().length < 10) {
+        return "Description must be at least 10 characters if provided";
+      }
+      return null;
+    },
+  },
 };
 
 // Validate single field

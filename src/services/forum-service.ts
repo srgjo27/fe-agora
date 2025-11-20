@@ -26,7 +26,7 @@ class ForumService {
 
   async createCategory(req: CategoryRequest): Promise<CategoryResponse> {
     const response = await apiClient.post<CategoryResponse>(
-      API_ENDPOINTS.CATEGORIES,
+      API_ENDPOINTS.ADMIN.CATEGORY_CREATE,
       { ...req }
     );
 

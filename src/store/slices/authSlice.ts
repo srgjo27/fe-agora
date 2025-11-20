@@ -1,6 +1,8 @@
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import { User } from "@/types/user";
 import { authService, LoginRequest, RegisterRequest } from "@/services";
+import { safeRedirect } from "@/utils";
+import { ROUTES } from "@/constants";
 
 interface AuthState {
   user: User | null;
@@ -70,6 +72,8 @@ export const registerUser = createAsyncThunk(
 export const logoutUser = createAsyncThunk("auth/logout", async (_, {}) => {
   try {
     await authService.logout();
+
+    safeRedirect(ROUTES.ROOT);
   } catch (_) {}
 });
 

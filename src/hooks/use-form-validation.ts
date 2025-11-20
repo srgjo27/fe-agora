@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useRef } from "react";
 import {
   validateForm,
   validateField as coreValidateField,
@@ -18,7 +18,9 @@ interface UseFormValidationReturn<T> {
   formErrors: Record<string, string>;
   setFormData: React.Dispatch<React.SetStateAction<T>>;
   setFormErrors: React.Dispatch<React.SetStateAction<Record<string, string>>>;
-  handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  handleChange: (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => void;
   validateField: (fieldName: keyof T, value: string) => ValidationResult | null;
   validateAllFields: () => boolean;
   resetForm: () => void;
@@ -31,6 +33,7 @@ export function useFormValidation<T extends Record<string, any>>({
 }: UseFormValidationProps<T>): UseFormValidationReturn<T> {
   const [formData, setFormData] = useState<T>(initialData);
   const [formErrors, setFormErrors] = useState<Record<string, string>>({});
+  const initialDataRef = useRef(initialData);
 
   // Helper to update form errors
   const updateFieldError = useCallback((fieldName: keyof T, error: string) => {
@@ -56,7 +59,7 @@ export function useFormValidation<T extends Record<string, any>>({
   );
 
   const handleChange = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
+    (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
       const { name, value } = e.target;
 
       setFormData((prev) => ({
@@ -69,19 +72,19 @@ export function useFormValidation<T extends Record<string, any>>({
     [validateField]
   );
 
-  const validateAllFields = useCallback((): boolean => {
+  const validateAllFields = (): boolean => {
     const validationResults = validateForm(formData, validationRules);
     const errors = getFormErrors(validationResults);
 
     setFormErrors(errors);
 
     return !hasValidationErrors(validationResults);
-  }, [formData, validationRules]);
+  };
 
   const resetForm = useCallback(() => {
-    setFormData(initialData);
+    setFormData(initialDataRef.current);
     setFormErrors({});
-  }, [initialData]);
+  }, []);
 
   const clearErrors = useCallback(() => {
     setFormErrors({});
