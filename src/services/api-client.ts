@@ -1,6 +1,7 @@
 import axios, { AxiosInstance, AxiosResponse, AxiosError } from "axios";
 import { ApiResponse, ApiError } from "@/types";
-import { API_BASE_URL, API_ENDPOINTS, HTTP_STATUS } from "@/constants";
+import { API_BASE_URL, API_ENDPOINTS, HTTP_STATUS, ROUTES } from "@/constants";
+import { LocalStorage, safeRedirect } from "@/utils";
 
 class ApiClient {
   private axiosInstance: AxiosInstance;
@@ -17,6 +18,12 @@ class ApiClient {
 
     this.axiosInstance.interceptors.request.use(
       (config) => {
+        if (!config.headers.Authorization) {
+          const authState = LocalStorage.getItem<any>("persist:auth");
+          const cleanToken = JSON.parse(authState.token);
+          if (cleanToken) config.headers.Authorization = `Bearer ${cleanToken}`;
+        }
+
         return config;
       },
       (error) => Promise.reject(error)
@@ -41,7 +48,6 @@ class ApiClient {
 
             if (refreshResponse.data.access_token) {
               this.setAuthToken(refreshResponse.data.access_token);
-
               originalRequest.headers.Authorization = `Bearer ${refreshResponse.data.access_token}`;
 
               return this.axiosInstance(originalRequest);
@@ -49,9 +55,7 @@ class ApiClient {
           } catch (refreshError) {
             this.clearAuthToken();
 
-            if (typeof window !== "undefined") {
-              window.location.href = "/login";
-            }
+            safeRedirect(ROUTES.AUTH.LOGIN);
           }
         }
 

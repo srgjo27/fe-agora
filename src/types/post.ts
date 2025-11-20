@@ -1,4 +1,4 @@
-import { AuthorResponse } from "./user";
+import { AuthorResponse } from "@/types";
 
 export interface PostResponse {
   id: string;

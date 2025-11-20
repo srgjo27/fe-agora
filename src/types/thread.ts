@@ -1,5 +1,4 @@
-import { CategoryInfoResponse } from "./category";
-import { AuthorResponse } from "./user";
+import { AuthorResponse, CategoryInfoResponse } from "@/types";
 
 export interface ThreadSummaryResponse {
   id: string;

@@ -10,7 +10,7 @@ import {
   CardFooter,
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { capitalize, formatRelativeTime } from "@/lib/utils";
+import { capitalize, formatRelativeTime } from "@/utils";
 import { useRouter } from "next/navigation";
 import { ROUTES } from "@/constants";
 import { Background, PageError, PageLoading } from "@/components/ui";

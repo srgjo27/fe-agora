@@ -8,7 +8,7 @@ import {
 } from "@/hooks/use-forum";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui";
-import { capitalize, formatRelativeTime } from "@/lib/utils";
+import { capitalize, formatRelativeTime } from "@/utils";
 import { ROUTES } from "@/constants";
 import { PageError, PageLoading } from "@/components/ui";
 import { useAuthSelector } from "@/store";

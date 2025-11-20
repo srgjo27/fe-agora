@@ -57,7 +57,13 @@ export const LoginForm = () => {
     );
 
     if (loginUser.fulfilled.match(result)) {
-      router.push(ROUTES.COMMUNITY.FORUM);
+      const userRole = result.payload.user.role;
+
+      if (userRole === "admin") {
+        router.push(ROUTES.DASHBOARD.HOME);
+      } else {
+        router.push(ROUTES.COMMUNITY.FORUM);
+      }
     }
   };
 

@@ -29,6 +29,11 @@ export const API_ENDPOINTS = {
     VOTE_ON_THREAD: (id: string) => `/threads/${id}/vote`,
     VOTE_ON_POST: (id: string) => `/posts/${id}/vote`,
   },
+
+  ADMIN: {
+    GET_USERS: "/admin/users",
+    CATEGORY_CREATE: "/admin/categories",
+  },
 } as const;
 
 // HTTP Status Codes

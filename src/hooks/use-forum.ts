@@ -7,21 +7,39 @@ import {
 } from "@/types";
 import { useEffect, useState } from "react";
 
-interface UseForumReturn {
-  threads?: ThreadSummaryResponse[] | null;
-  thread?: ThreadDetailResponse | null;
-  posts?: PostResponse[] | null;
-  meta?: PaginationMeta | null;
+interface UseThreadsReturn {
+  threads: ThreadSummaryResponse[] | null;
+  meta: PaginationMeta | null;
   isLoading: boolean;
   error: string | null;
-  refetch?: () => void;
-  createPost?: (
+  refetch: () => void;
+}
+
+interface UseThreadByIdReturn {
+  thread: ThreadDetailResponse | null;
+  isLoading: boolean;
+  error: string | null;
+  refetch: () => void;
+}
+
+interface UsePostsByThreadIdReturn {
+  posts: PostResponse[] | null;
+  meta: PaginationMeta | null;
+  isLoading: boolean;
+  error: string | null;
+  refetch: () => void;
+}
+
+interface UseCreatePostReturn {
+  createPost: (
     content: string,
     parent_post_id?: string
   ) => Promise<PostResponse | null>;
+  isLoading: boolean;
+  error: string | null;
 }
 
-export function useThreads(params: PaginationParams): UseForumReturn {
+export function useThreads(params: PaginationParams): UseThreadsReturn {
   const [threads, setThreads] = useState<ThreadSummaryResponse[] | null>(null);
   const [meta, setMeta] = useState<PaginationMeta | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -57,7 +75,7 @@ export function useThreads(params: PaginationParams): UseForumReturn {
   };
 }
 
-export function useThreadById(thread_id: string): UseForumReturn {
+export function useThreadById(thread_id: string): UseThreadByIdReturn {
   const [thread, setThread] = useState<ThreadDetailResponse | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
@@ -92,7 +110,9 @@ export function useThreadById(thread_id: string): UseForumReturn {
   };
 }
 
-export function usePostsByThreadId(thread_id: string): UseForumReturn {
+export function usePostsByThreadId(
+  thread_id: string
+): UsePostsByThreadIdReturn {
   const [posts, setPosts] = useState<PostResponse[] | null>(null);
   const [meta, setMeta] = useState<PaginationMeta | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -131,7 +151,7 @@ export function usePostsByThreadId(thread_id: string): UseForumReturn {
   };
 }
 
-export function useCreatePost(thread_id: string): UseForumReturn {
+export function useCreatePost(thread_id: string): UseCreatePostReturn {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
