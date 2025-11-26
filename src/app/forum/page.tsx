@@ -1,5 +1,7 @@
 "use client";
 
+import { useState } from "react";
+
 import { useThreads } from "@/hooks/use-forum";
 import { useAuthStatus } from "@/store";
 import {
@@ -14,11 +16,27 @@ import { capitalize, formatRelativeTime } from "@/utils";
 import { useRouter } from "next/navigation";
 import { ROUTES } from "@/constants";
 import { Background, PageError, PageLoading } from "@/components/ui";
+import {
+  ChevronUpIcon,
+  ChevronDownIcon,
+  ChevronUpDownIcon,
+  ChevronLeftIcon,
+  ChevronRightIcon,
+  AdjustmentsHorizontalIcon,
+  Bars3Icon,
+  ClipboardIcon,
+  BookmarkIcon,
+  HandThumbUpIcon,
+  ChatBubbleBottomCenterIcon,
+  ViewfinderCircleIcon,
+} from "@heroicons/react/24/outline";
+import { ClientOnly } from "@/components/providers";
 
 export default function ForumPage() {
   const { isAuthenticated } = useAuthStatus();
-  const { threads, isLoading, error, refetch } = useThreads({
-    page: 1,
+  const [page, setPage] = useState(1);
+  const { threads, meta, isLoading, error, refetch } = useThreads({
+    page,
     limit: 10,
   });
   const router = useRouter();
@@ -44,7 +62,6 @@ export default function ForumPage() {
 
   return (
     <div className="min-h-screen bg-gray-900 text-white relative overflow-hidden">
-      {/* Cyberpunk Grid Background - matching root layout */}
       <Background />
 
       {/* Header Section */}
@@ -64,61 +81,48 @@ export default function ForumPage() {
                   </div>
                 </div>
                 <div>
-                  <h1 className="text-5xl font-black font-mono bg-gradient-to-r from-green-400 via-blue-400 to-cyan-400 bg-clip-text text-transparent drop-shadow-lg">
+                  <h1 className="text-4xl font-black font-mono bg-gradient-to-r from-green-400 via-blue-400 to-cyan-400 bg-clip-text text-transparent drop-shadow-lg">
                     &gt; FORUM_
                   </h1>
                   <p className="text-gray-300 text-md font-mono mt-1">
-                    // Connect, collaborate, and code together
+                    {`// Connect, collaborate, and code together`}
                   </p>
-                </div>
-              </div>
-
-              {/* Stats Pills */}
-              <div className="flex items-center space-x-4 font-mono">
-                <div className="flex items-center space-x-2 px-4 py-2 bg-gray-800/50 border border-green-500/30 backdrop-blur-sm">
-                  <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
-                  <span className="text-sm font-medium text-green-300">
-                    users_online: 0
-                  </span>
-                </div>
-                <div className="flex items-center space-x-2 px-4 py-2 bg-gray-800/50 border border-blue-500/30 backdrop-blur-sm">
-                  <div className="w-2 h-2 bg-blue-400 rounded-full animate-pulse"></div>
-                  <span className="text-sm font-medium text-blue-300">
-                    posts_today: 0
-                  </span>
                 </div>
               </div>
             </div>
 
-            {isAuthenticated && (
-              <div className="space-y-3">
-                <Button
-                  size="lg"
-                  className="bg-gray-800 border border-green-500/50 hover:border-green-400 hover:bg-gray-700 shadow-xl shadow-green-500/25 transform hover:scale-105 transition-all duration-200 text-lg px-8 py-4 font-mono text-green-400 hover:text-green-300"
-                >
-                  <span className="mr-3 text-green-400">&gt;</span>
-                  new_thread()
-                </Button>
-                <div className="flex space-x-2 font-mono">
+            <ClientOnly>
+              {isAuthenticated && (
+                <div className="space-y-3">
                   <Button
-                    variant="ghost"
-                    size="sm"
-                    className="text-gray-400 hover:text-cyan-400 hover:bg-gray-800/50 border border-gray-600/50 hover:border-cyan-500/30"
+                    size="md"
+                    onClick={() => router.push("/forum/create")}
+                    className="bg-gray-800 border border-green-500/50 hover:border-green-400 hover:bg-gray-700 shadow-xl shadow-green-500/25 transform hover:scale-105 transition-all duration-200 py-4 font-mono text-green-400 hover:text-green-300"
                   >
-                    <span className="mr-2 text-cyan-400">#</span>
-                    saved
+                    <span className="mr-2 text-green-400">&gt;</span>
+                    new_thread()
                   </Button>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="text-gray-400 hover:text-blue-400 hover:bg-gray-800/50 border border-gray-600/50 hover:border-blue-500/30"
-                  >
-                    <span className="mr-2 text-blue-400">~</span>
-                    drafts
-                  </Button>
+                  <div className="flex space-x-2 font-mono">
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="text-gray-400 hover:text-cyan-400 hover:bg-gray-800/50 border border-gray-600/50 hover:border-cyan-500/30"
+                    >
+                      <BookmarkIcon className="w-4 h-4 text-cyan-400 mr-2" />
+                      saved
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="text-gray-400 hover:text-blue-400 hover:bg-gray-800/50 border border-gray-600/50 hover:border-blue-500/30"
+                    >
+                      <ClipboardIcon className="w-4 h-4 text-blue-400 mr-2" />
+                      drafts
+                    </Button>
+                  </div>
                 </div>
-              </div>
-            )}
+              )}
+            </ClientOnly>
           </div>
         </div>
       </div>
@@ -141,22 +145,23 @@ export default function ForumPage() {
                 &gt; No threads found
               </h3>
               <p className="text-gray-300 mb-8 text-lg max-w-md mx-auto leading-relaxed">
-                // Start the first discussion in this terminal
+                {`// Start the first discussion in this terminal`}
               </p>
-              {isAuthenticated && (
-                <Button
-                  size="lg"
-                  className="bg-gray-800 border border-green-500/50 hover:border-green-400 hover:bg-gray-700 shadow-xl shadow-green-500/25 transform hover:scale-105 transition-all duration-300 text-lg px-10 py-4 font-mono text-green-400 hover:text-green-300"
-                >
-                  <span className="mr-2">&gt;</span>
-                  init_first_thread()
-                </Button>
-              )}
+              <ClientOnly>
+                {isAuthenticated && (
+                  <Button
+                    size="lg"
+                    className="bg-gray-800 border border-green-500/50 hover:border-green-400 hover:bg-gray-700 shadow-xl shadow-green-500/25 transform hover:scale-105 transition-all duration-300 text-lg px-10 py-4 font-mono text-green-400 hover:text-green-300"
+                  >
+                    <span className="mr-2">&gt;</span>
+                    init_first_thread()
+                  </Button>
+                )}
+              </ClientOnly>
             </CardContent>
           </Card>
         ) : (
           <div className="space-y-8">
-            {/* Terminal Stats Bar */}
             <div className="backdrop-blur-xl bg-gray-800/50 border border-gray-600/50 p-6 shadow-xl font-mono">
               <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-8">
@@ -168,24 +173,14 @@ export default function ForumPage() {
                     </div>
                     <div>
                       <p className="text-green-400 font-semibold text-lg">
-                        threads_active
+                        Threads Active
                       </p>
                       <p className="text-gray-400 text-sm">
-                        // current discussions
+                        {`// current discussions`}
                       </p>
                     </div>
                   </div>
                   <div className="h-12 w-px bg-gradient-to-b from-transparent via-gray-500 to-transparent"></div>
-                  <div className="flex items-center space-x-6">
-                    <div className="text-center">
-                      <p className="text-2xl font-bold text-blue-400">0</p>
-                      <p className="text-gray-400 text-xs">views_today</p>
-                    </div>
-                    <div className="text-center">
-                      <p className="text-2xl font-bold text-cyan-400">0</p>
-                      <p className="text-gray-400 text-xs">new_replies</p>
-                    </div>
-                  </div>
                 </div>
                 <div className="flex items-center space-x-3">
                   <Button
@@ -193,7 +188,7 @@ export default function ForumPage() {
                     size="sm"
                     className="text-gray-400 hover:text-green-400 hover:bg-gray-700/50 border border-gray-600/30 hover:border-green-500/30 backdrop-blur-sm font-mono"
                   >
-                    <span className="mr-2 text-green-400">|</span>
+                    <AdjustmentsHorizontalIcon className="w-4 h-4 text-green-400 mr-2" />
                     filter
                   </Button>
                   <Button
@@ -201,7 +196,7 @@ export default function ForumPage() {
                     size="sm"
                     className="text-gray-400 hover:text-blue-400 hover:bg-gray-700/50 border border-gray-600/30 hover:border-blue-500/30 backdrop-blur-sm font-mono"
                   >
-                    <span className="mr-2 text-blue-400">^</span>
+                    <ChevronUpDownIcon className="w-4 h-4 text-blue-400 mr-2" />
                     sort_latest
                   </Button>
                   <Button
@@ -209,19 +204,7 @@ export default function ForumPage() {
                     size="sm"
                     className="text-gray-400 hover:text-cyan-400 hover:bg-gray-700/50 border border-gray-600/30 hover:border-cyan-500/30 backdrop-blur-sm font-mono"
                   >
-                    <svg
-                      className="w-4 h-4"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M4 6h16M4 10h16M4 14h16M4 18h16"
-                      />
-                    </svg>
+                    <Bars3Icon className="w-4 h-4 text-cyan-400" />
                   </Button>
                 </div>
               </div>
@@ -271,19 +254,18 @@ export default function ForumPage() {
                       {/* Terminal Vote Section */}
                       <div className="flex flex-col items-center space-y-2 ml-6">
                         <div className="flex flex-col items-center space-y-1 p-3 backdrop-blur-sm bg-gray-700/50 border border-gray-600/30">
-                          <span className="text-green-400 text-lg">^</span>
+                          <ChevronUpIcon className="w-4 h-4 text-green-400" />
                           <span
-                            className={`text-lg font-bold ${
-                              thread.vote_count > 0
-                                ? "text-green-400"
-                                : thread.vote_count < 0
+                            className={`text-lg font-bold ${thread.vote_count > 0
+                              ? "text-green-400"
+                              : thread.vote_count < 0
                                 ? "text-red-400"
                                 : "text-gray-400"
-                            }`}
+                              }`}
                           >
                             {thread.vote_count}
                           </span>
-                          <span className="text-red-400 text-lg">v</span>
+                          <ChevronDownIcon className="w-4 h-4 text-red-400" />
                         </div>
                       </div>
                     </div>
@@ -312,11 +294,6 @@ export default function ForumPage() {
                               <span className="mr-1 text-blue-400"></span>
                               {formatRelativeTime(thread.created_at)}
                             </span>
-                            <span className="w-1 h-1 bg-gray-500"></span>
-                            <span className="flex items-center">
-                              <span className="mr-1 text-cyan-400">#</span>0
-                              views
-                            </span>
                           </div>
                         </div>
                       </div>
@@ -331,7 +308,7 @@ export default function ForumPage() {
                           }}
                           className="opacity-0 group-hover:opacity-100 transition-all duration-300 text-gray-400 hover:text-green-400 hover:bg-gray-700/50 border border-gray-600/50 hover:border-green-500/30 font-mono"
                         >
-                          <span className="mr-2 text-green-400">+</span>
+                          <HandThumbUpIcon className="w-4 h-4 text-green-400 mr-2" />
                           like()
                         </Button>
 
@@ -343,7 +320,7 @@ export default function ForumPage() {
                           }}
                           className="opacity-0 group-hover:opacity-100 transition-all duration-300 delay-75 text-gray-400 hover:text-blue-400 hover:bg-gray-700/50 border border-gray-600/50 hover:border-blue-500/30 font-mono"
                         >
-                          <span className="mr-2 text-blue-400">&gt;</span>
+                          <ChatBubbleBottomCenterIcon className="w-4 h-4 text-blue-400 mr-2" />
                           reply()
                         </Button>
 
@@ -354,10 +331,10 @@ export default function ForumPage() {
                             e.stopPropagation();
                             handleViewThread(thread.id);
                           }}
-                          className="opacity-0 group-hover:opacity-100 transition-all duration-300 delay-150 text-cyan-400 bg-gray-800/50 hover:bg-gray-700 border border-cyan-500/30 hover:border-cyan-400 shadow-lg px-6 font-mono"
+                          className="opacity-0 group-hover:opacity-100 transition-all duration-300 delay-150 text-cyan-400 bg-gray-800/50 hover:bg-gray-700 border border-cyan-500/30 hover:border-cyan-400 shadow-lg font-mono"
                         >
+                          <ViewfinderCircleIcon className="w-4 h-4 text-cyan-400 mr-2" />
                           view_thread()
-                          <span className="ml-2 text-cyan-400">&gt;&gt;</span>
                         </Button>
                       </div>
                     </div>
@@ -366,55 +343,35 @@ export default function ForumPage() {
               ))}
             </div>
 
-            {/* Terminal Load More Section */}
-            <div className="flex justify-center pt-12">
-              <div className="relative">
-                <div className="absolute inset-0 bg-green-500/20 blur-xl"></div>
+            {/* Pagination Controls */}
+            {meta && meta.total_pages > 1 && (
+              <div className="flex justify-center items-center space-x-4 pt-12">
                 <Button
-                  size="lg"
-                  className="relative backdrop-blur-xl bg-gray-800/50 border border-green-500/50 hover:border-green-400 text-green-400 hover:text-green-300 hover:bg-gray-700 transform hover:scale-105 transition-all duration-300 px-12 py-4 text-lg font-semibold font-mono shadow-2xl"
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setPage((p) => Math.max(1, p - 1))}
+                  disabled={page === 1}
+                  className="bg-gray-800/50 border-green-500/50 text-green-400 hover:bg-gray-700 hover:text-green-300 disabled:opacity-50 font-mono"
                 >
-                  <span className="mr-3 text-green-400">&gt;</span>
-                  load_more_threads()
-                  <div className="absolute -inset-1 bg-green-500/30 blur opacity-0 group-hover:opacity-100 transition-opacity duration-300 -z-10"></div>
+                  <ChevronLeftIcon className="w-4 h-4 mr-2" />
+                  prev_page()
+                </Button>
+                <span className="text-gray-400 font-mono text-sm">
+                  page <span className="text-green-400 font-bold">{page}</span> of{" "}
+                  <span className="text-green-400 font-bold">{meta.total_pages}</span>
+                </span>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setPage((p) => Math.min(meta.total_pages, p + 1))}
+                  disabled={page === meta.total_pages}
+                  className="bg-gray-800/50 border-green-500/50 text-green-400 hover:bg-gray-700 hover:text-green-300 disabled:opacity-50 font-mono"
+                >
+                  next_page()
+                  <ChevronRightIcon className="w-4 h-4 ml-2" />
                 </Button>
               </div>
-            </div>
-
-            {/* Terminal Footer Info */}
-            <div className="text-center pt-16 pb-8">
-              <div className="backdrop-blur-xl bg-gray-800/50 border border-gray-600/50 p-8 max-w-2xl mx-auto font-mono">
-                <div className="flex items-center justify-center space-x-3 mb-4">
-                  <div className="w-8 h-8 bg-gray-700 border border-green-500/30 flex items-center justify-center">
-                    <span className="text-green-400 text-lg font-bold">
-                      &gt;
-                    </span>
-                  </div>
-                  <h3 className="text-xl font-bold text-green-400">
-                    system.forum.status
-                  </h3>
-                </div>
-                <p className="text-gray-300 text-lg leading-relaxed mb-6">
-                  // connecting developers worldwide through terminal interface
-                </p>
-                <div className="flex items-center justify-center space-x-8 text-sm text-gray-400">
-                  <div className="flex items-center space-x-2">
-                    <div className="w-2 h-2 bg-green-400 animate-pulse"></div>
-                    <span>users_online: 0</span>
-                  </div>
-                  <div className="w-px h-4 bg-gray-600"></div>
-                  <div className="flex items-center space-x-2">
-                    <div className="w-2 h-2 bg-blue-400 animate-pulse"></div>
-                    <span>posts_today: 0</span>
-                  </div>
-                  <div className="w-px h-4 bg-gray-600"></div>
-                  <div className="flex items-center space-x-2">
-                    <div className="w-2 h-2 bg-cyan-400 animate-pulse"></div>
-                    <span>active_threads: 0</span>
-                  </div>
-                </div>
-              </div>
-            </div>
+            )}
           </div>
         )}
       </div>

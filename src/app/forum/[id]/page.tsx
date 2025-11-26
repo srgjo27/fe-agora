@@ -318,10 +318,8 @@ export default function ForumDetailPage({ params }: ForumDetailPageProps) {
 
               {/* Thread content */}
               <div className="p-8">
-                <div className="prose prose-invert max-w-none">
-                  <div className="text-gray-200 text-base leading-relaxed whitespace-pre-wrap font-mono">
-                    {thread.content}
-                  </div>
+                <div className="text-gray-200 text-base leading-relaxed whitespace-pre-wrap">
+                  {thread.content}
                 </div>
               </div>
 
@@ -432,7 +430,7 @@ export default function ForumDetailPage({ params }: ForumDetailPageProps) {
 
                       {/* Reply Content - Clean */}
                       <div className="ml-11 mb-3">
-                        <div className="text-gray-200 text-sm leading-relaxed">
+                        <div className="text-gray-200 text-sm leading-relaxed whitespace-pre-wrap">
                           {post.content}
                         </div>
                       </div>
@@ -518,7 +516,7 @@ export default function ForumDetailPage({ params }: ForumDetailPageProps) {
                           {/* Content Textarea */}
                           <div className="relative">
                             <textarea
-                              className="w-full min-h-[120px] bg-gray-800/50 border border-gray-600/50 rounded-lg p-4 text-gray-200 placeholder-gray-500 font-mono text-sm resize-y focus:outline-none focus:ring-2 focus:ring-cyan-500/50 focus:border-cyan-500/50 transition-all duration-300"
+                              className="w-full min-h-[120px] bg-gray-800/50 border border-gray-600/50 rounded-lg p-4 text-gray-200 placeholder-gray-500 text-sm resize-y focus:outline-none focus:ring-2 focus:ring-cyan-500/50 focus:border-cyan-500/50 transition-all duration-300"
                               value={replyContent}
                               onChange={(e) => setReplyContent(e.target.value)}
                               placeholder="// write your reply here..."

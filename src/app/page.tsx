@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useAppDispatch, useAuthSelector, logoutUser } from "@/store";
 import { ROUTES } from "@/constants";
 import { capitalize } from "@/utils/utils";
+import { ClientOnly } from "@/components/providers";
 
 export default function HomePage() {
   const dispatch = useAppDispatch();
@@ -28,7 +29,7 @@ export default function HomePage() {
             <div className="flex items-center space-x-4 text-xs font-mono text-gray-500">
               <Link
                 href={ROUTES.COMMUNITY.FORUM}
-                className="px-4 py-2 border-2 border-green-500/50 text-green-500 rounded-lg font-mono font-bold hover:bg-green-500/10 hover:border-green-400 focus:outline-none focus:ring-4 focus:ring-green-500/20 transition-all duration-300 backdrop-blur-sm"
+                className="px-4 py-2 border-2 border-green-500/50 text-green-500 rounded-md font-mono font-bold hover:bg-green-500/10 hover:border-green-400 focus:outline-none focus:ring-4 focus:ring-green-500/20 transition-all duration-300 backdrop-blur-sm"
               >
                 $ cd forum
               </Link>
@@ -276,76 +277,78 @@ export default function HomePage() {
 
         {/* Action Buttons */}
         <div className="space-y-6">
-          {isAuthenticated && user ? (
-            <div className="space-y-4">
-              <div className="bg-gray-800/60 backdrop-blur-sm border border-green-500/30 rounded-lg p-6">
-                <div className="flex items-center justify-center space-x-2 mb-4">
-                  <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-                  <span className="text-green-400 font-mono text-sm">
-                    AUTHENTICATED
-                  </span>
-                </div>
-                <p className="text-gray-300 font-mono mb-6">
-                  Access granted,{" "}
-                  <span className="text-blue-400 font-bold">
-                    {user.username}
-                  </span>
-                  <br />
-                  <span className="text-xs text-gray-500">
-                    Security clearance: {capitalize(user.role)}
-                  </span>
-                </p>
-                <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                  {user.role === "admin" && (
-                    <Link
-                      href={ROUTES.DASHBOARD.HOME}
-                      className="px-6 py-3 bg-purple-600 text-white text-sm rounded-lg font-mono font-bold hover:bg-purple-700 focus:outline-none focus:ring-4 focus:ring-purple-500/20 transition-all duration-300 transform hover:-translate-y-0.5"
+          <ClientOnly fallback={<div className="h-20" />}>
+            {isAuthenticated && user ? (
+              <div className="space-y-4">
+                <div className="bg-gray-800/60 backdrop-blur-sm border border-green-500/30 rounded-lg p-6">
+                  <div className="flex items-center justify-center space-x-2 mb-4">
+                    <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                    <span className="text-green-400 font-mono text-sm">
+                      AUTHENTICATED
+                    </span>
+                  </div>
+                  <p className="text-gray-300 font-mono mb-6">
+                    Access granted,{" "}
+                    <span className="text-blue-400 font-bold">
+                      {user.username}
+                    </span>
+                    <br />
+                    <span className="text-xs text-gray-500">
+                      Security clearance: {capitalize(user.role)}
+                    </span>
+                  </p>
+                  <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                    {user.role === "admin" && (
+                      <Link
+                        href={ROUTES.DASHBOARD.HOME}
+                        className="px-6 py-3 bg-purple-600 text-white text-sm rounded-md font-mono font-bold hover:bg-purple-700 focus:outline-none focus:ring-4 focus:ring-purple-500/20 transition-all duration-300 transform hover:-translate-y-0.5"
+                      >
+                        $ cd dashboard
+                      </Link>
+                    )}
+                    <button
+                      onClick={() => dispatch(logoutUser())}
+                      className="px-6 py-3 border-2 border-red-500/50 text-red-400 text-sm rounded-md font-mono font-bold hover:bg-red-500/10 hover:border-red-400 focus:outline-none focus:ring-4 focus:ring-red-500/20 transition-all duration-300 backdrop-blur-sm"
                     >
-                      $ cd dashboard
+                      $ ctrl + c
+                    </button>
+                  </div>
+                </div>
+              </div>
+            ) : (
+              <div className="space-y-4">
+                <div className="bg-gray-800/60 backdrop-blur-sm border border-yellow-500/30 rounded-lg p-6">
+                  <div className="flex items-center justify-center space-x-2 mb-4">
+                    <div className="w-2 h-2 bg-yellow-500 rounded-full animate-pulse"></div>
+                    <span className="text-yellow-400 font-mono text-sm">
+                      GUEST_MODE
+                    </span>
+                  </div>
+                  <p className="text-gray-300 font-mono mb-6">
+                    Authentication required for full platform access
+                    <br />
+                    <span className="text-xs text-gray-500">
+                      Initialize credentials to continue
+                    </span>
+                  </p>
+                  <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                    <Link
+                      href={ROUTES.AUTH.LOGIN}
+                      className="px-5 py-3 bg-blue-600 text-white text-sm rounded-md font-mono font-bold hover:bg-blue-600 focus:outline-none focus:ring-4 focus:ring-blue-500/20 transition-all duration-300  transform hover:-translate-y-0.5"
+                    >
+                      $ cd login
                     </Link>
-                  )}
-                  <button
-                    onClick={() => dispatch(logoutUser())}
-                    className="px-6 py-3 border-2 border-red-500/50 text-red-400 text-sm rounded-lg font-mono font-bold hover:bg-red-500/10 hover:border-red-400 focus:outline-none focus:ring-4 focus:ring-red-500/20 transition-all duration-300 backdrop-blur-sm"
-                  >
-                    $ ctrl + c
-                  </button>
+                    <Link
+                      href={ROUTES.AUTH.REGISTER}
+                      className="px-6 py-3 border-2 border-blue-500/50 text-blue-400 text-sm rounded-md font-mono font-bold hover:bg-blue-500/10 hover:border-blue-400 focus:outline-none focus:ring-4 focus:ring-blue-500/20 transition-all duration-300 backdrop-blur-sm"
+                    >
+                      $ cd register
+                    </Link>
+                  </div>
                 </div>
               </div>
-            </div>
-          ) : (
-            <div className="space-y-4">
-              <div className="bg-gray-800/60 backdrop-blur-sm border border-yellow-500/30 rounded-lg p-6">
-                <div className="flex items-center justify-center space-x-2 mb-4">
-                  <div className="w-2 h-2 bg-yellow-500 rounded-full animate-pulse"></div>
-                  <span className="text-yellow-400 font-mono text-sm">
-                    GUEST_MODE
-                  </span>
-                </div>
-                <p className="text-gray-300 font-mono mb-6">
-                  Authentication required for full platform access
-                  <br />
-                  <span className="text-xs text-gray-500">
-                    Initialize credentials to continue
-                  </span>
-                </p>
-                <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                  <Link
-                    href={ROUTES.AUTH.LOGIN}
-                    className="px-5 py-3 bg-blue-600 text-white text-sm rounded-lg font-mono font-bold hover:bg-blue-600 focus:outline-none focus:ring-4 focus:ring-blue-500/20 transition-all duration-300  transform hover:-translate-y-0.5"
-                  >
-                    $ cd login
-                  </Link>
-                  <Link
-                    href={ROUTES.AUTH.REGISTER}
-                    className="px-6 py-3 border-2 border-blue-500/50 text-blue-400 text-sm rounded-lg font-mono font-bold hover:bg-blue-500/10 hover:border-blue-400 focus:outline-none focus:ring-4 focus:ring-blue-500/20 transition-all duration-300 backdrop-blur-sm"
-                  >
-                    $ cd register
-                  </Link>
-                </div>
-              </div>
-            </div>
-          )}
+            )}
+          </ClientOnly>
         </div>
 
         {/* Footer Info */}

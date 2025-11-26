@@ -30,8 +30,8 @@ export const CommonValidationRules = {
     minLength: 5,
     maxLength: 60,
     custom: (value: string) => {
-      if (value && !/^[a-zA-Z\s]+$/.test(value)) {
-        return "Name can only contain letters and spaces";
+      if (value && !/^[a-zA-Z0-9\s]+$/.test(value)) {
+        return "Name can only contain letters, numbers, and spaces";
       }
       return null;
     },
@@ -74,6 +74,16 @@ export const CommonValidationRules = {
     custom: (value: string) => {
       if (value && value.trim().length > 0 && value.trim().length < 10) {
         return "Description must be at least 10 characters if provided";
+      }
+      return null;
+    },
+  },
+  content: {
+    required: true,
+    minLength: 20,
+    custom: (value: string) => {
+      if (value && value.trim().length < 20) {
+        return "Thread content must be at least 20 characters";
       }
       return null;
     },
