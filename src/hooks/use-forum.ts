@@ -4,8 +4,9 @@ import {
   ThreadDetailResponse,
   PaginationMeta,
   PostResponse,
+  CategoryResponse,
 } from "@/types";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 
 interface UseThreadsReturn {
   threads: ThreadSummaryResponse[] | null;
@@ -39,6 +40,24 @@ interface UseCreatePostReturn {
   error: string | null;
 }
 
+interface UseCategoriesReturn {
+  categories: CategoryResponse[] | null;
+  isLoading: boolean;
+  error: string | null;
+}
+
+interface UseDeleteThreadReturn {
+  deleteThread: (thread_id: string) => Promise<boolean>;
+  isLoading: boolean;
+  error: string | null;
+}
+
+interface UseVoteThreadReturn {
+  voteThread: (thread_id: string, vote_type: number) => Promise<boolean>;
+  isLoading: boolean;
+  error: string | null;
+}
+
 export function useThreads(params: PaginationParams): UseThreadsReturn {
   const [threads, setThreads] = useState<ThreadSummaryResponse[] | null>(null);
   const [meta, setMeta] = useState<PaginationMeta | null>(null);
@@ -46,7 +65,7 @@ export function useThreads(params: PaginationParams): UseThreadsReturn {
   const [error, setError] = useState<string | null>(null);
   const { page, limit } = params;
 
-  const fetchThreads = async () => {
+  const fetchThreads = useCallback(async () => {
     setIsLoading(true);
     setError(null);
 
@@ -55,16 +74,16 @@ export function useThreads(params: PaginationParams): UseThreadsReturn {
 
       setThreads(response.data);
       setMeta(response.meta);
-    } catch (error: any) {
-      setError(error.message || "Gagal mengambil data thread");
+    } catch (error) {
+      setError((error as Error)?.message || "Gagal mengambil data thread");
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [page, limit]);
 
   useEffect(() => {
     fetchThreads();
-  }, [page, limit]);
+  }, [fetchThreads]);
 
   return {
     threads,
@@ -80,7 +99,7 @@ export function useThreadById(thread_id: string): UseThreadByIdReturn {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
-  const fetchThread = async () => {
+  const fetchThread = useCallback(async () => {
     if (!thread_id) {
       return;
     }
@@ -91,16 +110,16 @@ export function useThreadById(thread_id: string): UseThreadByIdReturn {
     try {
       const response = await forumService.getThreadById(thread_id);
       setThread(response);
-    } catch (error: any) {
-      setError(error.message || "Gagal mengambil detail thread");
+    } catch (error) {
+      setError((error as Error)?.message || "Gagal mengambil detail thread");
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [thread_id]);
 
   useEffect(() => {
     fetchThread();
-  }, [thread_id]);
+  }, [fetchThread]);
 
   return {
     thread,
@@ -118,7 +137,7 @@ export function usePostsByThreadId(
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
-  const fetchPosts = async () => {
+  const fetchPosts = useCallback(async () => {
     if (!thread_id) {
       return;
     }
@@ -131,16 +150,16 @@ export function usePostsByThreadId(
 
       setPosts(response.data);
       setMeta(response.meta);
-    } catch (error: any) {
-      setError(error.message || "Gagal mengambil data post");
+    } catch (error) {
+      setError((error as Error)?.message || "Gagal mengambil data post");
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [thread_id]);
 
   useEffect(() => {
     fetchPosts();
-  }, [thread_id]);
+  }, [fetchPosts]);
 
   return {
     posts,
@@ -175,8 +194,8 @@ export function useCreatePost(thread_id: string): UseCreatePostReturn {
       );
 
       return response;
-    } catch (error: any) {
-      setError(error.message || "Gagal membuat balasan publik");
+    } catch (error) {
+      setError((error as Error)?.message || "Gagal membuat balasan publik");
 
       return null;
     } finally {
@@ -186,6 +205,91 @@ export function useCreatePost(thread_id: string): UseCreatePostReturn {
 
   return {
     createPost,
+    isLoading,
+    error,
+  };
+}
+
+export function useCategories(): UseCategoriesReturn {
+  const [categories, setCategories] = useState<CategoryResponse[] | null>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      setIsLoading(true);
+      setError(null);
+
+      try {
+        const response = await forumService.getCategories();
+        setCategories(response);
+      } catch (error) {
+        setError((error as Error)?.message || "Gagal mengambil data kategori");
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchCategories();
+  }, []);
+
+  return {
+    categories,
+    isLoading,
+    error,
+  };
+}
+
+export function useDeleteThread(): UseDeleteThreadReturn {
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const deleteThread = async (thread_id: string): Promise<boolean> => {
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      await forumService.deleteThread(thread_id);
+      return true;
+    } catch (error) {
+      setError((error as Error)?.message || "Gagal menghapus thread");
+      return false;
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  return {
+    deleteThread,
+    isLoading,
+    error,
+  };
+}
+
+export function useVoteThread(): UseVoteThreadReturn {
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const voteThread = async (
+    thread_id: string,
+    vote_type: number
+  ): Promise<boolean> => {
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      await forumService.voteOnThread(thread_id, vote_type);
+      return true;
+    } catch (error) {
+      setError((error as Error)?.message || "Gagal melakukan voting");
+      return false;
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  return {
+    voteThread,
     isLoading,
     error,
   };

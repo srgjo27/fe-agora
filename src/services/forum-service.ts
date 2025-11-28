@@ -107,7 +107,7 @@ class ForumService {
   async voteOnThread(thread_id: string, vote_type: number): Promise<string> {
     const response = await apiClient.post<string>(
       API_ENDPOINTS.FORUM.VOTE_ON_THREAD(thread_id),
-      vote_type
+      { vote_type }
     );
 
     return response.message;
@@ -116,7 +116,7 @@ class ForumService {
   async voteOnPost(post_id: string, vote_type: number): Promise<string> {
     const response = await apiClient.post<string>(
       API_ENDPOINTS.FORUM.VOTE_ON_POST(post_id),
-      vote_type
+      { vote_type }
     );
 
     return response.message;

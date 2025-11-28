@@ -12,7 +12,13 @@ import {
   CardContent,
   Loading,
 } from "@/components/ui";
-import { ArrowLeftIcon, PlusIcon, UserIcon } from "@heroicons/react/24/outline";
+import {
+  ArrowLeftIcon,
+  CommandLineIcon,
+  DocumentTextIcon,
+  ExclamationTriangleIcon,
+  LightBulbIcon,
+} from "@heroicons/react/24/outline";
 import { useFormValidation } from "@/hooks";
 import { CommonValidationRules } from "@/utils";
 import { useAuthSelector } from "@/store";
@@ -23,7 +29,7 @@ import { ROUTES } from "@/constants";
 
 export default function CreateThreadPage() {
   const router = useRouter();
-  const { isAuthenticated, user } = useAuthSelector();
+  const { isAuthenticated } = useAuthSelector();
   const [categories, setCategories] = useState<CategoryResponse[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -88,250 +94,231 @@ export default function CreateThreadPage() {
   return (
     <ClientOnly>
       {isAuthenticated && (
-        <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50 to-indigo-100 dark:from-gray-900 dark:via-gray-900 dark:to-gray-800">
+        <div className="min-h-screen bg-gray-900 text-white relative overflow-hidden font-mono">
           <Background />
 
-          <div className="relative z-10">
-            {/* Enhanced Header */}
-            <header className="bg-white/80 dark:bg-gray-800/90 backdrop-blur-md border-b border-gray-200/50 dark:border-gray-700/50 sticky top-0 z-50 shadow-sm">
-              <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div className="flex items-center justify-between h-20">
-                  <div className="flex items-center space-x-6">
-                    <Button
-                      className="flex items-center space-x-2 text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/20 border border-gray-200 dark:border-gray-700 hover:border-blue-300 dark:hover:border-blue-600 px-4 py-2.5 rounded-lg transition-all duration-200 font-medium"
-                      variant="ghost"
-                      onClick={handleCancel}
-                    >
-                      <ArrowLeftIcon className="w-4 h-4" />
-                      <span>Back to Forum</span>
-                    </Button>
-
-                    <div className="flex items-center space-x-4">
-                      <div>
-                        <h1 className="text-xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 dark:from-white dark:to-gray-300 bg-clip-text text-transparent">
-                          Create New Thread
-                        </h1>
-                        <p className="text-sm text-gray-500 dark:text-gray-400 mt-0.5">
-                          Share your ideas with the community
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="flex items-center space-x-2 px-2 py-2 bg-gray-100/80 dark:bg-gray-700/80 backdrop-blur-sm rounded-md border border-gray-200/50 dark:border-gray-600/50">
-                    <div className="flex items-center justify-center w-5 h-5 bg-blue-100 dark:bg-blue-900/30 rounded-lg">
-                      <UserIcon className="w-4 h-4 text-blue-600 dark:text-blue-400" />
-                    </div>
-                    <span className="text-sm font-semibold text-gray-800 dark:text-gray-200">
-                      {user?.username}
-                    </span>
-                  </div>
+          {/* Header */}
+          <div className="relative backdrop-blur-xl bg-gray-900/80 border-b border-gray-700/50 shadow-2xl sticky top-0 z-50">
+            <div className="max-w-7xl mx-auto px-6 py-4">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-4">
+                  <Button
+                    variant="ghost"
+                    onClick={handleCancel}
+                    className="text-gray-400 hover:text-green-400 hover:bg-gray-800/50 border border-gray-600/50 hover:border-green-500/30"
+                  >
+                    <ArrowLeftIcon className="w-4 h-4 mr-2" />
+                    cd ..
+                  </Button>
+                  <div className="h-6 w-px bg-gray-700"></div>
+                  <h1 className="text-xl font-bold text-green-400 flex items-center">
+                    <span className="mr-2">&gt;</span>
+                    INIT_NEW_THREAD
+                    <span className="animate-pulse ml-1">_</span>
+                  </h1>
                 </div>
               </div>
-            </header>
+            </div>
+          </div>
 
-            {/* Main Content */}
-            <main className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-              <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
-                {/* Main Form */}
-                <div className="lg:col-span-3">
-                  <Card className="bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm shadow-2xl border border-gray-200/50 dark:border-gray-700/50 rounded-2xl overflow-hidden">
-                    <CardContent className="p-8">
-                      <div className="mb-8">
-                        <div className="flex items-center space-x-3 mb-4">
-                          <div className="flex items-center justify-center w-8 h-8 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-lg">
-                            <PlusIcon className="w-4 h-4 text-white" />
-                          </div>
-                          <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
-                            New Discussion
-                          </h2>
-                        </div>
-                        <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
-                          Create a new thread to start engaging discussions with
-                          the community. Make sure your content is clear and
-                          follows our community guidelines.
-                        </p>
+          {/* Main Content */}
+          <div className="relative max-w-7xl mx-auto px-6 py-8">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+              {/* Main Form */}
+              <div className="lg:col-span-2 space-y-6">
+                <Card className="backdrop-blur-xl bg-gray-800/50 border border-gray-600/50 shadow-xl">
+                  <CardContent className="p-6">
+                    <div className="flex items-center space-x-3 mb-6 border-b border-gray-700/50 pb-4">
+                      <CommandLineIcon className="w-6 h-6 text-green-400" />
+                      <h2 className="text-lg font-bold text-gray-200">
+                        Thread Configuration
+                      </h2>
+                    </div>
+
+                    <form onSubmit={handleSubmit} className="space-y-6">
+                      {/* Title Field */}
+                      <div className="space-y-2">
+                        <label
+                          htmlFor="title"
+                          className="text-sm text-gray-400 flex items-center"
+                        >
+                          <span className="text-green-400 mr-2">$</span>
+                          set_title
+                        </label>
+                        <Input
+                          id="title"
+                          name="title"
+                          value={formData.title}
+                          onChange={handleChange}
+                          placeholder="Enter thread title..."
+                          className="bg-gray-900/50 border-gray-600/50 text-white placeholder-gray-600 focus:border-green-500/50 focus:ring-green-500/20 font-mono"
+                          error={formErrors.title}
+                          disabled={isSubmitting}
+                          required
+                        />
                       </div>
 
-                      <form onSubmit={handleSubmit} className="space-y-8">
-                        {/* Title Field */}
-                        <div className="bg-gray-50/80 dark:bg-gray-700/30 rounded-xl p-6 border border-gray-200/50 dark:border-gray-600/30">
-                          <Input
-                            label="Thread Title"
-                            type="text"
-                            className="bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 shadow-sm focus:shadow-md transition-shadow duration-200"
-                            id="title"
-                            name="title"
-                            value={formData.title}
-                            onChange={handleChange}
-                            placeholder="Enter a clear and engaging title..."
-                            helpText="Choose a descriptive title that summarizes your discussion topic"
-                            error={formErrors.title}
-                            disabled={isSubmitting}
-                            required
-                          />
-                        </div>
+                      {/* Category Field */}
+                      <div className="space-y-2">
+                        <label
+                          htmlFor="category_id"
+                          className="text-sm text-gray-400 flex items-center"
+                        >
+                          <span className="text-green-400 mr-2">$</span>
+                          select_category
+                        </label>
+                        <Select
+                          id="category_id"
+                          name="category_id"
+                          value={formData.category_id}
+                          onChange={handleChange}
+                          options={categories.map((category) => ({
+                            value: category.id,
+                            label: category.name,
+                          }))}
+                          placeholder="Choose category..."
+                          className="bg-gray-900/50 border-gray-600/50 text-white placeholder-gray-600 focus:border-green-500/50 focus:ring-green-500/20 font-mono"
+                          error={formErrors.category_id}
+                          disabled={isSubmitting || isLoading}
+                          required
+                        />
+                      </div>
 
-                        {/* Category Field */}
-                        <div className="bg-gray-50/80 dark:bg-gray-700/30 rounded-xl p-6 border border-gray-200/50 dark:border-gray-600/30">
-                          <Select
-                            label="Discussion Category"
-                            id="category_id"
-                            name="category_id"
-                            value={formData.category_id}
-                            onChange={handleChange}
-                            options={categories.map((category) => ({
-                              value: category.id,
-                              label: category.name,
-                            }))}
-                            placeholder="Choose the most relevant category"
-                            error={formErrors.category_id}
-                            disabled={isSubmitting || isLoading}
-                            helpText="Select the category that best fits your discussion topic"
-                            required
-                          />
-                        </div>
+                      {/* Content Field */}
+                      <div className="space-y-2">
+                        <label
+                          htmlFor="content"
+                          className="text-sm text-gray-400 flex items-center"
+                        >
+                          <span className="text-green-400 mr-2">$</span>
+                          write_content
+                        </label>
+                        <Textarea
+                          id="content"
+                          name="content"
+                          value={formData.content}
+                          onChange={handleChange}
+                          placeholder="Type your message here..."
+                          rows={12}
+                          className="bg-gray-900/50 border-gray-600/50 text-white placeholder-gray-600 focus:border-green-500/50 focus:ring-green-500/20 font-mono"
+                          error={formErrors.content}
+                          disabled={isSubmitting}
+                          required
+                        />
+                      </div>
 
-                        {/* Content Field */}
-                        <div className="bg-gray-50/80 dark:bg-gray-700/30 rounded-xl p-6 border border-gray-200/50 dark:border-gray-600/30">
-                          <Textarea
-                            label="Thread Content"
-                            id="content"
-                            name="content"
-                            value={formData.content}
-                            onChange={handleChange}
-                            placeholder="Share your thoughts, questions, or ideas in detail..."
-                            rows={12}
-                            error={formErrors.content}
-                            helpText="Write engaging content that encourages discussion and follows community guidelines"
-                            disabled={isSubmitting}
-                            required
-                            className="bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 shadow-sm focus:shadow-md transition-shadow duration-200"
-                          />
-                        </div>
+                      {/* Form Actions */}
+                      <div className="flex items-center justify-end space-x-4 pt-4 border-t border-gray-700/50">
+                        <Button
+                          type="button"
+                          onClick={handleCancel}
+                          disabled={isSubmitting}
+                          variant="ghost"
+                          className="text-gray-400 hover:text-red-400 hover:bg-gray-800/50 border border-gray-600/50 hover:border-red-500/30"
+                        >
+                          abort()
+                        </Button>
 
-                        {/* Form Actions */}
-                        <div className="bg-gray-50/50 dark:bg-gray-800/30 rounded-xl p-6 border border-gray-200/50 dark:border-gray-600/30">
-                          <div className="flex flex-col sm:flex-row justify-between items-center space-y-4 sm:space-y-0 sm:space-x-4">
-                            <div className="flex items-center space-x-2 text-sm text-gray-600 dark:text-gray-400">
-                              <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-                              <span>Ready to publish your thread</span>
+                        <Button
+                          type="submit"
+                          disabled={
+                            isSubmitting ||
+                            !formData.title ||
+                            !formData.category_id ||
+                            !formData.content
+                          }
+                          className="bg-green-600/20 border border-green-500/50 text-green-400 hover:bg-green-600/30 hover:text-green-300 shadow-lg shadow-green-500/10"
+                        >
+                          {isSubmitting ? (
+                            <div className="flex items-center space-x-2">
+                              <Loading size="sm" variant="dots" />
+                              <span>executing...</span>
                             </div>
-
-                            <div className="flex space-x-3">
-                              <Button
-                                type="button"
-                                onClick={handleCancel}
-                                disabled={isSubmitting}
-                                variant="outline"
-                                className="px-6 py-3 border-2 border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 text-sm rounded-xl font-medium hover:bg-gray-50 dark:hover:bg-gray-700 hover:border-gray-400 dark:hover:border-gray-500 focus:outline-none focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-600 transition-all duration-200"
-                              >
-                                Cancel
-                              </Button>
-
-                              <Button
-                                type="submit"
-                                disabled={
-                                  isSubmitting ||
-                                  !formData.title ||
-                                  !formData.category_id ||
-                                  !formData.content
-                                }
-                                className="px-8 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 disabled:from-gray-400 disabled:to-gray-500 text-white rounded-xl transition-all duration-200 font-semibold shadow-lg hover:shadow-xl disabled:shadow-none transform hover:scale-105 disabled:hover:scale-100"
-                              >
-                                {isSubmitting ? (
-                                  <div className="flex items-center justify-center space-x-2">
-                                    <Loading size="sm" variant="dots" />
-                                    <span>Publishing...</span>
-                                  </div>
-                                ) : (
-                                  <div className="flex items-center space-x-2">
-                                    <PlusIcon className="w-5 h-5" />
-                                    <span>Publish Thread</span>
-                                  </div>
-                                )}
-                              </Button>
-                            </div>
-                          </div>
-                        </div>
-                      </form>
-                    </CardContent>
-                  </Card>
-                </div>
-
-                {/* Sidebar */}
-                <div className="lg:col-span-1">
-                  <div className="space-y-6">
-                    {/* Guidelines Card */}
-                    <Card className="bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm shadow-xl border border-gray-200/50 dark:border-gray-700/50 rounded-2xl overflow-hidden">
-                      <CardContent className="p-6">
-                        <div className="flex items-center space-x-2 mb-4">
-                          <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
-                          <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
-                            Community Guidelines
-                          </h3>
-                        </div>
-                        <div className="space-y-3 text-sm text-gray-600 dark:text-gray-400">
-                          <div className="flex items-start space-x-2">
-                            <div className="w-1.5 h-1.5 bg-green-500 rounded-full mt-2 flex-shrink-0"></div>
-                            <p>
-                              Be respectful and constructive in your discussions
-                            </p>
-                          </div>
-                          <div className="flex items-start space-x-2">
-                            <div className="w-1.5 h-1.5 bg-green-500 rounded-full mt-2 flex-shrink-0"></div>
-                            <p>
-                              Choose clear, descriptive titles for better
-                              engagement
-                            </p>
-                          </div>
-                          <div className="flex items-start space-x-2">
-                            <div className="w-1.5 h-1.5 bg-green-500 rounded-full mt-2 flex-shrink-0"></div>
-                            <p>
-                              Select the most relevant category for your topic
-                            </p>
-                          </div>
-                          <div className="flex items-start space-x-2">
-                            <div className="w-1.5 h-1.5 bg-green-500 rounded-full mt-2 flex-shrink-0"></div>
-                            <p>
-                              Use proper formatting to make content readable
-                            </p>
-                          </div>
-                        </div>
-                      </CardContent>
-                    </Card>
-
-                    {/* Tips Card */}
-                    <Card className="bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 border border-blue-200/50 dark:border-blue-700/50 rounded-2xl overflow-hidden">
-                      <CardContent className="p-6">
-                        <div className="flex items-center space-x-2 mb-4">
-                          <div className="w-2 h-2 bg-indigo-500 rounded-full"></div>
-                          <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
-                            Pro Tips
-                          </h3>
-                        </div>
-                        <div className="space-y-3 text-sm text-gray-700 dark:text-gray-300">
-                          <p className="leading-relaxed">
-                            💡 <strong>Engage your audience:</strong> Ask
-                            questions to encourage responses and create
-                            meaningful discussions.
-                          </p>
-                          <p className="leading-relaxed">
-                            🎯 <strong>Stay on topic:</strong> Keep your content
-                            focused and relevant to the selected category.
-                          </p>
-                          <p className="leading-relaxed">
-                            ✨ <strong>Quality over quantity:</strong>{" "}
-                            Well-thought-out posts get better engagement than
-                            rushed ones.
-                          </p>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  </div>
-                </div>
+                          ) : (
+                            <span>publish_thread()</span>
+                          )}
+                        </Button>
+                      </div>
+                    </form>
+                  </CardContent>
+                </Card>
               </div>
-            </main>
+
+              {/* Sidebar */}
+              <div className="lg:col-span-1 space-y-6">
+                {/* Guidelines Card */}
+                <Card className="backdrop-blur-xl bg-gray-800/50 border border-gray-600/50 shadow-xl">
+                  <CardContent className="p-6">
+                    <div className="flex items-center space-x-3 mb-4 border-b border-gray-700/50 pb-2">
+                      <DocumentTextIcon className="w-5 h-5 text-blue-400" />
+                      <h3 className="text-sm font-bold text-blue-400 uppercase tracking-wider">
+                        README.md
+                      </h3>
+                    </div>
+                    <div className="space-y-3 text-sm text-gray-400 font-mono">
+                      <div className="flex items-start space-x-2">
+                        <span className="text-blue-400">-</span>
+                        <p>Be respectful and constructive.</p>
+                      </div>
+                      <div className="flex items-start space-x-2">
+                        <span className="text-blue-400">-</span>
+                        <p>Use clear, descriptive titles.</p>
+                      </div>
+                      <div className="flex items-start space-x-2">
+                        <span className="text-blue-400">-</span>
+                        <p>Select the correct category.</p>
+                      </div>
+                      <div className="flex items-start space-x-2">
+                        <span className="text-blue-400">-</span>
+                        <p>Format code blocks properly.</p>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                {/* Tips Card */}
+                <Card className="backdrop-blur-xl bg-gray-800/50 border border-yellow-600/30 shadow-xl">
+                  <CardContent className="p-6">
+                    <div className="flex items-center space-x-3 mb-4 border-b border-gray-700/50 pb-2">
+                      <LightBulbIcon className="w-5 h-5 text-yellow-400" />
+                      <h3 className="text-sm font-bold text-yellow-400 uppercase tracking-wider">
+                        HINTS
+                      </h3>
+                    </div>
+                    <div className="space-y-3 text-sm text-gray-400 font-mono">
+                      <p>
+                        <span className="text-yellow-400">TIP:</span> Ask
+                        questions to encourage discussion.
+                      </p>
+                      <p>
+                        <span className="text-yellow-400">TIP:</span> Keep it
+                        focused on the topic.
+                      </p>
+                      <p>
+                        <span className="text-yellow-400">TIP:</span> Quality
+                        &gt; Quantity.
+                      </p>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                {/* Warning Card */}
+                <Card className="backdrop-blur-xl bg-gray-800/50 border border-red-600/30 shadow-xl">
+                  <CardContent className="p-6">
+                    <div className="flex items-center space-x-3 mb-4 border-b border-gray-700/50 pb-2">
+                      <ExclamationTriangleIcon className="w-5 h-5 text-red-400" />
+                      <h3 className="text-sm font-bold text-red-400 uppercase tracking-wider">
+                        WARNING
+                      </h3>
+                    </div>
+                    <p className="text-sm text-gray-400 font-mono">
+                      Violating community guidelines may result in account
+                      suspension.
+                    </p>
+                  </CardContent>
+                </Card>
+              </div>
+            </div>
           </div>
         </div>
       )}
