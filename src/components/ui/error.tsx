@@ -13,15 +13,15 @@ export const PageError = ({
   error,
   title = "Something went wrong",
   buttonLabel = "Back",
-  onButtonClick = () => window.history.back(),
+  onButtonClick = () => {},
 }: PageErrorOptions) => {
   return (
-    <div className="min-h-screen bg-gray-900 flex items-center justify-center p-6">
+    <div className="min-h-screen bg-gray-950 flex items-center justify-center p-6">
       <div className="text-center max-w-md w-full space-y-8">
         {/* Error Icon - Simple & Clean */}
         <div className="mx-auto w-16 h-16 rounded-full bg-red-500/10 flex items-center justify-center border border-red-500/20">
           <svg
-            className="w-8 h-8 text-red-400"
+            className="w-8 h-8 text-red-500"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -36,7 +36,7 @@ export const PageError = ({
         </div>
 
         {/* Title */}
-        <h1 className="text-2xl font-medium text-white">{title}</h1>
+        <h1 className="text-2xl font-bold text-white">{title}</h1>
 
         {/* Error Message */}
         {error && <p className="text-gray-400 leading-relaxed">{error}</p>}
@@ -45,7 +45,7 @@ export const PageError = ({
         <Button
           onClick={onButtonClick}
           variant="outline"
-          className="px-6 py-3 border-2 border-red-500/50 text-red-400 rounded-lg font-mono font-bold hover:bg-red-500/10 hover:border-red-400 focus:outline-none focus:ring-4 focus:ring-red-500/20 transition-all duration-300 backdrop-blur-sm"
+          className="px-6 py-2 border-gray-700 text-gray-300 hover:bg-gray-800 hover:text-white"
         >
           {buttonLabel}
         </Button>

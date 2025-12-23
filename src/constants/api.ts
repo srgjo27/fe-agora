@@ -1,4 +1,3 @@
-// API endpoints constants
 export const API_BASE_URL =
   process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8080/api/v1";
 
@@ -19,12 +18,8 @@ export const API_ENDPOINTS = {
   FORUM: {
     THREADS: "/threads",
     THREAD_DETAIL: (id: string) => `/threads/${id}`,
-    THREAD_CREATE: `/threads`,
-    THREAD_DELETE: (id: string) => `/threads/${id}`,
-    THREAD_UPDATE: (id: string) => `/threads/${id}`,
 
     POSTS: (id: string) => `/threads/${id}/posts`,
-    POST_CREATE: (id: string) => `/threads/${id}/posts`,
 
     VOTE_ON_THREAD: (id: string) => `/threads/${id}/vote`,
     VOTE_ON_POST: (id: string) => `/posts/${id}/vote`,

@@ -75,8 +75,8 @@ export const RegisterForm = () => {
             name="username"
             value={formData.username}
             onChange={handleChange}
-            placeholder="enter_username"
-            label="$ ./username"
+            placeholder="johndoe"
+            label="Username"
             error={formErrors.username}
             disabled={isLoading}
           />
@@ -87,8 +87,8 @@ export const RegisterForm = () => {
             name="email"
             value={formData.email}
             onChange={handleChange}
-            placeholder="user@domain.net"
-            label="$ ./email_address"
+            placeholder="name@company.com"
+            label="Email address"
             error={formErrors.email}
             disabled={isLoading}
           />
@@ -100,13 +100,13 @@ export const RegisterForm = () => {
             value={formData.password}
             onChange={handleChange}
             placeholder="••••••••••••"
-            label="$ ./secure_passkey"
+            label="Password"
             error={formErrors.password}
             disabled={isLoading}
           />
         </div>
 
-        <SubmitButton label="npm run create" isLoading={isLoading} />
+        <SubmitButton label="Create account" isLoading={isLoading} />
       </form>
 
       <RegisterFormDivider />

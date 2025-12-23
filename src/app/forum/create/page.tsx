@@ -2,63 +2,52 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import {
-  Input,
-  Select,
-  Textarea,
-  Button,
-  Background,
-  Card,
-  CardContent,
-  Loading,
-} from "@/components/ui";
+import { useFormValidation } from "@/hooks/use-form-validation";
+import { forumService } from "@/services/forum-service";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Select } from "@/components/ui/select";
+import { CategoryResponse } from "@/types";
 import {
   ArrowLeftIcon,
-  CommandLineIcon,
-  DocumentTextIcon,
-  ExclamationTriangleIcon,
-  LightBulbIcon,
+  PaperAirplaneIcon,
+  InformationCircleIcon,
+  PhotoIcon,
+  LinkIcon,
+  ListBulletIcon,
+  CodeBracketIcon,
+  HashtagIcon,
 } from "@heroicons/react/24/outline";
-import { useFormValidation } from "@/hooks";
-import { CommonValidationRules } from "@/utils";
-import { useAuthSelector } from "@/store";
-import { CategoryResponse, ThreadRequest } from "@/types";
-import { forumService } from "@/services";
-import { ClientOnly } from "@/components/providers";
-import { ROUTES } from "@/constants";
 
 export default function CreateThreadPage() {
   const router = useRouter();
-  const { isAuthenticated } = useAuthSelector();
   const [categories, setCategories] = useState<CategoryResponse[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
+  const [_, setIsLoading] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const { formData, formErrors, handleChange, validateAllFields } =
-    useFormValidation<ThreadRequest>({
-      initialData: { title: "", content: "", category_id: "" },
+    useFormValidation({
+      initialData: {
+        title: "",
+        content: "",
+        categoryId: "",
+      },
       validationRules: {
-        title: CommonValidationRules.name,
-        content: CommonValidationRules.content,
-        category_id: {
-          required: true,
-        },
+        title: { required: true },
+        content: { required: true },
+        categoryId: { required: true },
       },
     });
 
   useEffect(() => {
-    if (!isAuthenticated) {
-      router.push(ROUTES.AUTH.LOGIN);
-    }
-  }, [isAuthenticated, router]);
-
-  useEffect(() => {
     const fetchCategories = async () => {
       setIsLoading(true);
-
       try {
-        const categoriesData = await forumService.getCategories();
-        setCategories(categoriesData);
+        const data = await forumService.getCategories();
+        setCategories(data);
+      } catch (error) {
+        console.error("Failed to fetch categories:", error);
       } finally {
         setIsLoading(false);
       }
@@ -67,261 +56,208 @@ export default function CreateThreadPage() {
     fetchCategories();
   }, []);
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-
+  const handleSubmit = async () => {
     if (!validateAllFields()) return;
 
     setIsSubmitting(true);
     try {
-      const threadData = {
-        title: formData.title.trim(),
-        content: formData.content.trim(),
-        category_id: formData.category_id,
-      };
-
-      await forumService.createThread(threadData);
-      router.push(ROUTES.COMMUNITY.FORUM);
+      await forumService.createThread({
+        title: formData.title,
+        content: formData.content,
+        category_id: formData.categoryId,
+      });
+      router.push("/forum");
+    } catch (error) {
+      console.error("Failed to create thread:", error);
     } finally {
       setIsSubmitting(false);
     }
   };
 
-  const handleCancel = () => {
-    router.back();
-  };
-
   return (
-    <ClientOnly>
-      {isAuthenticated && (
-        <div className="min-h-screen bg-gray-900 text-white relative overflow-hidden font-mono">
-          <Background />
+    <div className="min-h-screen bg-gray-950 text-gray-100 font-sans selection:bg-blue-500/30">
+      {/* Top Navigation Bar */}
+      <header className="sticky top-0 z-30 border-b border-gray-800/40 bg-gray-950/80 backdrop-blur-md">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+          <div className="flex items-center gap-4">
+            <Button
+              variant="ghost"
+              onClick={() => router.back()}
+              className="text-gray-400 hover:text-white hover:bg-gray-800/50 -ml-2"
+            >
+              <ArrowLeftIcon className="w-5 h-5 mr-2" />
+              Back
+            </Button>
+            <div className="h-4 w-px bg-gray-800" />
+            <span className="text-sm font-medium text-gray-500">Draft</span>
+          </div>
 
-          {/* Header */}
-          <div className="relative backdrop-blur-xl bg-gray-900/80 border-b border-gray-700/50 shadow-2xl sticky top-0 z-50">
-            <div className="max-w-7xl mx-auto px-6 py-4">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center space-x-4">
-                  <Button
-                    variant="ghost"
-                    onClick={handleCancel}
-                    className="text-gray-400 hover:text-green-400 hover:bg-gray-800/50 border border-gray-600/50 hover:border-green-500/30"
-                  >
-                    <ArrowLeftIcon className="w-4 h-4 mr-2" />
-                    cd ..
-                  </Button>
-                  <div className="h-6 w-px bg-gray-700"></div>
-                  <h1 className="text-xl font-bold text-green-400 flex items-center">
-                    <span className="mr-2">&gt;</span>
-                    INIT_NEW_THREAD
-                    <span className="animate-pulse ml-1">_</span>
-                  </h1>
-                </div>
+          <div className="flex items-center gap-3">
+            <Button
+              variant="ghost"
+              onClick={() => router.back()}
+              className="text-gray-400 hover:text-white"
+            >
+              Discard
+            </Button>
+            <Button
+              onClick={handleSubmit}
+              disabled={isSubmitting}
+              className="bg-blue-600 hover:bg-blue-500 text-white shadow-[0_0_15px_rgba(37,99,235,0.3)] border border-blue-500/50"
+            >
+              {isSubmitting ? (
+                "Publishing..."
+              ) : (
+                <>
+                  <PaperAirplaneIcon className="w-4 h-4 mr-2" />
+                  Publish Thread
+                </>
+              )}
+            </Button>
+          </div>
+        </div>
+      </header>
+
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-16">
+          {/* Main Editor Area */}
+          <div className="lg:col-span-8 space-y-10">
+            {/* Title Input */}
+            <div className="space-y-4">
+              <Input
+                name="title"
+                value={formData.title}
+                onChange={handleChange}
+                placeholder="Give your thread a title..."
+                className="text-5xl font-bold bg-transparent border-none px-0 placeholder:text-gray-700 focus:ring-0 focus:ring-offset-0 h-auto py-2 leading-tight tracking-tight w-full"
+              />
+              {formErrors.title && (
+                <p className="text-red-400 text-sm pl-1">{formErrors.title}</p>
+              )}
+            </div>
+
+            {/* Category Selector - Pill Style */}
+            <div className="flex items-center gap-4">
+              <div className="relative group">
+                <Select
+                  name="categoryId"
+                  value={formData.categoryId}
+                  onChange={handleChange}
+                  options={categories.map((c) => ({
+                    value: c.id,
+                    label: c.name,
+                  }))}
+                  placeholder="Select a channel..."
+                  className="w-auto min-w-[180px] bg-gray-900/50 border-gray-800 text-gray-300 rounded-full px-5 py-2 text-sm hover:border-gray-700 hover:bg-gray-900 transition-all focus:ring-blue-500/20 focus:border-blue-500/50"
+                />
+                {formErrors.categoryId && (
+                  <p className="absolute top-full left-0 mt-1 text-red-400 text-xs pl-2">
+                    {formErrors.categoryId}
+                  </p>
+                )}
               </div>
+              <span className="text-gray-600 text-sm">
+                in which channel should this be posted?
+              </span>
+            </div>
+
+            {/* Editor Toolbar */}
+            <div className="flex items-center gap-2 py-4 border-y border-gray-800/30 text-gray-400 sticky top-20 bg-gray-950 z-20">
+              <button className="p-2.5 hover:bg-gray-800/50 rounded-lg hover:text-gray-200 transition-all duration-200 group">
+                <span className="font-bold serif group-hover:text-white">
+                  B
+                </span>
+              </button>
+              <button className="p-2.5 hover:bg-gray-800/50 rounded-lg hover:text-gray-200 transition-all duration-200 group">
+                <span className="italic serif group-hover:text-white">I</span>
+              </button>
+              <div className="w-px h-5 bg-gray-800/50 mx-2" />
+              <button className="p-2.5 hover:bg-gray-800/50 rounded-lg hover:text-gray-200 transition-all duration-200 group">
+                <LinkIcon className="w-5 h-5 group-hover:text-white" />
+              </button>
+              <button className="p-2.5 hover:bg-gray-800/50 rounded-lg hover:text-gray-200 transition-all duration-200 group">
+                <PhotoIcon className="w-5 h-5 group-hover:text-white" />
+              </button>
+              <div className="w-px h-5 bg-gray-800/50 mx-2" />
+              <button className="p-2.5 hover:bg-gray-800/50 rounded-lg hover:text-gray-200 transition-all duration-200 group">
+                <ListBulletIcon className="w-5 h-5 group-hover:text-white" />
+              </button>
+              <button className="p-2.5 hover:bg-gray-800/50 rounded-lg hover:text-gray-200 transition-all duration-200 group">
+                <CodeBracketIcon className="w-5 h-5 group-hover:text-white" />
+              </button>
+              <button className="p-2.5 hover:bg-gray-800/50 rounded-lg hover:text-gray-200 transition-all duration-200 group">
+                <HashtagIcon className="w-5 h-5 group-hover:text-white" />
+              </button>
+            </div>
+
+            {/* Main Content Area */}
+            <div className="min-h-[600px]">
+              <Textarea
+                name="content"
+                value={formData.content}
+                onChange={handleChange}
+                placeholder="Write your thoughts here..."
+                className="w-full h-full min-h-[600px] bg-transparent border-none p-4 text-lg text-gray-300 placeholder:text-gray-700 focus:ring-0 focus:ring-offset-0 resize-none leading-relaxed"
+              />
+              {formErrors.content && (
+                <p className="text-red-400 text-sm mt-2">
+                  {formErrors.content}
+                </p>
+              )}
             </div>
           </div>
 
-          {/* Main Content */}
-          <div className="relative max-w-7xl mx-auto px-6 py-8">
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-              {/* Main Form */}
-              <div className="lg:col-span-2 space-y-6">
-                <Card className="backdrop-blur-xl bg-gray-800/50 border border-gray-600/50 shadow-xl">
-                  <CardContent className="p-6">
-                    <div className="flex items-center space-x-3 mb-6 border-b border-gray-700/50 pb-4">
-                      <CommandLineIcon className="w-6 h-6 text-green-400" />
-                      <h2 className="text-lg font-bold text-gray-200">
-                        Thread Configuration
-                      </h2>
-                    </div>
-
-                    <form onSubmit={handleSubmit} className="space-y-6">
-                      {/* Title Field */}
-                      <div className="space-y-2">
-                        <label
-                          htmlFor="title"
-                          className="text-sm text-gray-400 flex items-center"
-                        >
-                          <span className="text-green-400 mr-2">$</span>
-                          set_title
-                        </label>
-                        <Input
-                          id="title"
-                          name="title"
-                          value={formData.title}
-                          onChange={handleChange}
-                          placeholder="Enter thread title..."
-                          className="bg-gray-900/50 border-gray-600/50 text-white placeholder-gray-600 focus:border-green-500/50 focus:ring-green-500/20 font-mono"
-                          error={formErrors.title}
-                          disabled={isSubmitting}
-                          required
-                        />
-                      </div>
-
-                      {/* Category Field */}
-                      <div className="space-y-2">
-                        <label
-                          htmlFor="category_id"
-                          className="text-sm text-gray-400 flex items-center"
-                        >
-                          <span className="text-green-400 mr-2">$</span>
-                          select_category
-                        </label>
-                        <Select
-                          id="category_id"
-                          name="category_id"
-                          value={formData.category_id}
-                          onChange={handleChange}
-                          options={categories.map((category) => ({
-                            value: category.id,
-                            label: category.name,
-                          }))}
-                          placeholder="Choose category..."
-                          className="bg-gray-900/50 border-gray-600/50 text-white placeholder-gray-600 focus:border-green-500/50 focus:ring-green-500/20 font-mono"
-                          error={formErrors.category_id}
-                          disabled={isSubmitting || isLoading}
-                          required
-                        />
-                      </div>
-
-                      {/* Content Field */}
-                      <div className="space-y-2">
-                        <label
-                          htmlFor="content"
-                          className="text-sm text-gray-400 flex items-center"
-                        >
-                          <span className="text-green-400 mr-2">$</span>
-                          write_content
-                        </label>
-                        <Textarea
-                          id="content"
-                          name="content"
-                          value={formData.content}
-                          onChange={handleChange}
-                          placeholder="Type your message here..."
-                          rows={12}
-                          className="bg-gray-900/50 border-gray-600/50 text-white placeholder-gray-600 focus:border-green-500/50 focus:ring-green-500/20 font-mono"
-                          error={formErrors.content}
-                          disabled={isSubmitting}
-                          required
-                        />
-                      </div>
-
-                      {/* Form Actions */}
-                      <div className="flex items-center justify-end space-x-4 pt-4 border-t border-gray-700/50">
-                        <Button
-                          type="button"
-                          onClick={handleCancel}
-                          disabled={isSubmitting}
-                          variant="ghost"
-                          className="text-gray-400 hover:text-red-400 hover:bg-gray-800/50 border border-gray-600/50 hover:border-red-500/30"
-                        >
-                          abort()
-                        </Button>
-
-                        <Button
-                          type="submit"
-                          disabled={
-                            isSubmitting ||
-                            !formData.title ||
-                            !formData.category_id ||
-                            !formData.content
-                          }
-                          className="bg-green-600/20 border border-green-500/50 text-green-400 hover:bg-green-600/30 hover:text-green-300 shadow-lg shadow-green-500/10"
-                        >
-                          {isSubmitting ? (
-                            <div className="flex items-center space-x-2">
-                              <Loading size="sm" variant="dots" />
-                              <span>executing...</span>
-                            </div>
-                          ) : (
-                            <span>publish_thread()</span>
-                          )}
-                        </Button>
-                      </div>
-                    </form>
-                  </CardContent>
-                </Card>
+          {/* Sidebar Guidelines */}
+          <div className="lg:col-span-4 space-y-6">
+            <div className="bg-gray-900/10 border border-gray-800/20 rounded-2xl p-8 backdrop-blur-sm sticky top-32">
+              <div className="flex items-center gap-2 mb-6 text-gray-400">
+                <InformationCircleIcon className="w-5 h-5" />
+                <h3 className="font-medium text-sm uppercase tracking-wider">
+                  Posting Guidelines
+                </h3>
               </div>
-
-              {/* Sidebar */}
-              <div className="lg:col-span-1 space-y-6">
-                {/* Guidelines Card */}
-                <Card className="backdrop-blur-xl bg-gray-800/50 border border-gray-600/50 shadow-xl">
-                  <CardContent className="p-6">
-                    <div className="flex items-center space-x-3 mb-4 border-b border-gray-700/50 pb-2">
-                      <DocumentTextIcon className="w-5 h-5 text-blue-400" />
-                      <h3 className="text-sm font-bold text-blue-400 uppercase tracking-wider">
-                        README.md
-                      </h3>
-                    </div>
-                    <div className="space-y-3 text-sm text-gray-400 font-mono">
-                      <div className="flex items-start space-x-2">
-                        <span className="text-blue-400">-</span>
-                        <p>Be respectful and constructive.</p>
-                      </div>
-                      <div className="flex items-start space-x-2">
-                        <span className="text-blue-400">-</span>
-                        <p>Use clear, descriptive titles.</p>
-                      </div>
-                      <div className="flex items-start space-x-2">
-                        <span className="text-blue-400">-</span>
-                        <p>Select the correct category.</p>
-                      </div>
-                      <div className="flex items-start space-x-2">
-                        <span className="text-blue-400">-</span>
-                        <p>Format code blocks properly.</p>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-
-                {/* Tips Card */}
-                <Card className="backdrop-blur-xl bg-gray-800/50 border border-yellow-600/30 shadow-xl">
-                  <CardContent className="p-6">
-                    <div className="flex items-center space-x-3 mb-4 border-b border-gray-700/50 pb-2">
-                      <LightBulbIcon className="w-5 h-5 text-yellow-400" />
-                      <h3 className="text-sm font-bold text-yellow-400 uppercase tracking-wider">
-                        HINTS
-                      </h3>
-                    </div>
-                    <div className="space-y-3 text-sm text-gray-400 font-mono">
-                      <p>
-                        <span className="text-yellow-400">TIP:</span> Ask
-                        questions to encourage discussion.
-                      </p>
-                      <p>
-                        <span className="text-yellow-400">TIP:</span> Keep it
-                        focused on the topic.
-                      </p>
-                      <p>
-                        <span className="text-yellow-400">TIP:</span> Quality
-                        &gt; Quantity.
-                      </p>
-                    </div>
-                  </CardContent>
-                </Card>
-
-                {/* Warning Card */}
-                <Card className="backdrop-blur-xl bg-gray-800/50 border border-red-600/30 shadow-xl">
-                  <CardContent className="p-6">
-                    <div className="flex items-center space-x-3 mb-4 border-b border-gray-700/50 pb-2">
-                      <ExclamationTriangleIcon className="w-5 h-5 text-red-400" />
-                      <h3 className="text-sm font-bold text-red-400 uppercase tracking-wider">
-                        WARNING
-                      </h3>
-                    </div>
-                    <p className="text-sm text-gray-400 font-mono">
-                      Violating community guidelines may result in account
-                      suspension.
-                    </p>
-                  </CardContent>
-                </Card>
-              </div>
+              <ul className="space-y-6 text-sm text-gray-500">
+                <li className="flex gap-4">
+                  <span className="flex-shrink-0 w-6 h-6 rounded-full bg-gray-900/50 border border-gray-800 flex items-center justify-center text-xs font-medium text-gray-600">
+                    1
+                  </span>
+                  <span>
+                    <strong className="text-gray-300 block mb-1 font-medium">
+                      Be Specific
+                    </strong>
+                    Use a clear title and provide enough context for others to
+                    understand your post.
+                  </span>
+                </li>
+                <li className="flex gap-4">
+                  <span className="flex-shrink-0 w-6 h-6 rounded-full bg-gray-900/50 border border-gray-800 flex items-center justify-center text-xs font-medium text-gray-600">
+                    2
+                  </span>
+                  <span>
+                    <strong className="text-gray-300 block mb-1 font-medium">
+                      Choose the Right Channel
+                    </strong>
+                    Select the most relevant category to ensure your post
+                    reaches the right audience.
+                  </span>
+                </li>
+                <li className="flex gap-4">
+                  <span className="flex-shrink-0 w-6 h-6 rounded-full bg-gray-900/50 border border-gray-800 flex items-center justify-center text-xs font-medium text-gray-600">
+                    3
+                  </span>
+                  <span>
+                    <strong className="text-gray-300 block mb-1 font-medium">
+                      Respect the Community
+                    </strong>
+                    Keep discussions civil and constructive. Harassment is not
+                    tolerated.
+                  </span>
+                </li>
+              </ul>
             </div>
           </div>
         </div>
-      )}
-    </ClientOnly>
+      </main>
+    </div>
   );
 }

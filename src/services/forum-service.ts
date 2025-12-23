@@ -63,7 +63,7 @@ class ForumService {
 
   async createThread(data: ThreadRequest): Promise<ThreadDetailResponse> {
     const response = await apiClient.post<ThreadDetailResponse>(
-      API_ENDPOINTS.FORUM.THREAD_CREATE,
+      API_ENDPOINTS.FORUM.THREADS,
       { ...data }
     );
 
@@ -84,7 +84,7 @@ class ForumService {
     content?: string
   ): Promise<ThreadDetailResponse> {
     const response = await apiClient.patch<ThreadDetailResponse>(
-      API_ENDPOINTS.FORUM.THREAD_UPDATE(thread_id),
+      API_ENDPOINTS.FORUM.THREAD_DETAIL(thread_id),
       { title, content }
     );
 
@@ -97,7 +97,7 @@ class ForumService {
     parent_post_id?: string
   ): Promise<PostResponse> {
     const response = await apiClient.post<PostResponse>(
-      API_ENDPOINTS.FORUM.POST_CREATE(thread_id),
+      API_ENDPOINTS.FORUM.POSTS(thread_id),
       { content, parent_post_id }
     );
 

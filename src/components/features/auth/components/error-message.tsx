@@ -3,7 +3,7 @@ interface ErrorMessageProps {
 }
 
 export const ErrorMessage = ({ error }: ErrorMessageProps) => (
-  <div className="bg-red-900/50 border border-red-500/50 text-red-300 px-4 py-3 rounded-lg flex items-center space-x-2 backdrop-blur-sm">
+  <div className="bg-red-900/20 border border-red-500/20 text-red-400 px-4 py-3 rounded-lg flex items-center space-x-2">
     <svg
       className="w-5 h-5 flex-shrink-0"
       fill="currentColor"
@@ -15,6 +15,6 @@ export const ErrorMessage = ({ error }: ErrorMessageProps) => (
         clipRule="evenodd"
       />
     </svg>
-    <span className="text-xs font-mono">{error}</span>
+    <span className="text-sm font-medium">{error}</span>
   </div>
 );

@@ -39,9 +39,7 @@ export default function ForumPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-900 text-white relative overflow-hidden">
-      <Background />
-
+    <div className="min-h-screen bg-gray-950 text-white relative">
       <ForumHeader />
 
       {/* Main Content */}
@@ -49,16 +47,23 @@ export default function ForumPage() {
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
           {/* Sidebar */}
           <div className="hidden lg:block lg:col-span-1">
-            <div className="sticky top-8">
+            <div className="sticky top-24">
               <ForumSidebar isAuthenticated={isAuthenticated} />
             </div>
           </div>
 
           {/* Thread List Area */}
           <div className="lg:col-span-3 space-y-6">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 backdrop-blur-xl bg-gray-800/30 border border-gray-700/50 p-4 rounded-lg">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
               {/* Search Bar */}
               <div className="relative flex-1 max-w-md">
+                <div className="relative">
+                  <MagnifyingGlassIcon className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                  <Input
+                    placeholder="Search discussions..."
+                    className="pl-10 bg-gray-900 border-gray-800 focus:border-blue-500 focus:ring-blue-500/20 rounded-lg"
+                  />
+                </div>
               </div>
               <ForumFilter />
             </div>

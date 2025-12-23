@@ -4,22 +4,22 @@ import { ROUTES } from "@/constants";
 export const FormFooter = () => (
   <>
     {/* Terms */}
-    <p className="text-xs text-center text-gray-500 leading-relaxed font-mono">
-      Secure authentication via quantum protocols{" "}
+    <p className="text-xs text-center text-gray-500 leading-relaxed">
+      By signing in, you agree to our{" "}
       <a href="#" className="text-blue-400 hover:text-blue-300 underline">
-        Security_Policy.txt
+        Security Policy
       </a>
     </p>
 
     {/* Register Link */}
     <div className="text-center">
-      <p className="text-sm text-gray-400 font-mono">
-        No account detected?{" "}
+      <p className="text-sm text-gray-400">
+        Don't have an account?{" "}
         <Link
           href={ROUTES.AUTH.REGISTER}
-          className="font-medium text-green-400 hover:text-green-300 transition-colors"
+          className="font-medium text-blue-400 hover:text-blue-300 transition-colors"
         >
-          Initialize_New_User →
+          Sign up
         </Link>
       </p>
     </div>

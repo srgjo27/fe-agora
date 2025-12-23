@@ -82,21 +82,15 @@ export const Loading = ({
 
 // Page loading component
 export const PageLoading = ({ props }: { props?: string }) => (
-  <div className="min-h-screen bg-gray-900 text-white flex items-center justify-center">
-    <div className="text-center font-mono">
+  <div className="min-h-screen bg-gray-950 text-white flex items-center justify-center">
+    <div className="text-center">
       <div className="relative mb-8">
-        <div className="w-16 h-16 border-2 border-green-500/30 border-t-green-400 rounded-lg animate-spin mx-auto"></div>
-        <div className="absolute inset-0 w-16 h-16 border-2 border-blue-500/20 border-r-blue-400 rounded-lg animate-spin animate-reverse mx-auto"></div>
+        <div className="w-12 h-12 border-2 border-gray-800 border-t-blue-500 rounded-full animate-spin mx-auto"></div>
       </div>
-      <p className="text-green-400 text-lg font-medium mb-2">&gt; Loading...</p>
+      <p className="text-white text-lg font-medium mb-2">Loading...</p>
       <p className="text-gray-500 text-sm">
         {props ? props : "Initializing Agora platform..."}
       </p>
-      <div className="mt-4 flex items-center justify-center space-x-1">
-        <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
-        <div className="w-2 h-2 bg-blue-400 rounded-full animate-pulse delay-200"></div>
-        <div className="w-2 h-2 bg-cyan-400 rounded-full animate-pulse delay-400"></div>
-      </div>
     </div>
   </div>
 );

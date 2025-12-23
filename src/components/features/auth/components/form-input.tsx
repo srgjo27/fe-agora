@@ -21,11 +21,8 @@ export const FormInput = ({
   error,
   disabled = false,
 }: FormInputProps) => (
-  <div>
-    <label
-      htmlFor={id}
-      className="block text-sm font-mono font-medium text-blue-400 mb-2"
-    >
+  <div className="space-y-1.5">
+    <label htmlFor={id} className="block text-sm font-medium text-gray-300">
       {label}
     </label>
     <input
@@ -36,16 +33,16 @@ export const FormInput = ({
       onChange={onChange}
       placeholder={placeholder}
       disabled={disabled}
-      className={`w-full px-4 py-3 rounded-lg border-2 transition-all duration-300 bg-gray-900/50 backdrop-blur-sm text-white font-mono placeholder-gray-500 ${
+      className={`w-full px-4 py-3 rounded-lg border transition-all duration-200 bg-gray-900/50 text-white placeholder-gray-500 ${
         error
-          ? "border-red-500/50 focus:border-red-400 focus:ring-red-500/20"
-          : "border-gray-600/50 focus:border-blue-400 focus:ring-blue-500/20"
-      } focus:outline-none focus:ring-4 disabled:opacity-50`}
+          ? "border-red-500/50 focus:border-red-500 focus:ring-red-500/20"
+          : "border-gray-800 focus:border-blue-500 focus:ring-blue-500/20"
+      } focus:outline-none focus:ring-4 disabled:opacity-50 disabled:cursor-not-allowed`}
     />
     {error && (
-      <div className="flex items-center mt-2 text-red-400 text-xs font-mono">
+      <div className="flex items-center mt-1.5 text-red-400 text-sm">
         <svg
-          className="w-4 h-4 mr-1 flex-shrink-0"
+          className="w-4 h-4 mr-1.5 flex-shrink-0"
           fill="currentColor"
           viewBox="0 0 20 20"
         >

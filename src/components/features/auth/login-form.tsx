@@ -79,8 +79,8 @@ export const LoginForm = () => {
             name="email"
             value={formData.email}
             onChange={handleChange}
-            placeholder="user@domain.net"
-            label="$ ./email_input"
+            placeholder="name@company.com"
+            label="Email address"
             error={formErrors.email}
             disabled={isLoading}
           />
@@ -92,14 +92,14 @@ export const LoginForm = () => {
             value={formData.password}
             onChange={handleChange}
             placeholder="••••••••••••"
-            label="$ ./password_key"
+            label="Password"
             error={formErrors.password}
             disabled={isLoading}
           />
         </div>
 
         <FormControls />
-        <SubmitButton label="npm run auth" isLoading={isLoading} />
+        <SubmitButton label="Sign in" isLoading={isLoading} />
         <FormDivider />
         <SocialLoginSection />
         <FormFooter />
