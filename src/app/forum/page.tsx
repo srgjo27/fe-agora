@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useThreads } from "@/hooks/use-forum";
 import { useAuthStatus } from "@/store";
 import { Input } from "@/components/ui/input";
-import { Background, PageError, PageLoading } from "@/components/ui";
+import { PageError, PageLoading } from "@/components/ui";
 import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 import {
   ForumHeader,

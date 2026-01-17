@@ -24,16 +24,6 @@ export function ForumEmptyState({ isAuthenticated }: ForumEmptyStateProps) {
         <p className="text-gray-400 mb-8 max-w-sm mx-auto">
           Be the first to start a conversation in this community.
         </p>
-        <ClientOnly>
-          {isAuthenticated && (
-            <Button
-              size="lg"
-              className="bg-blue-600 hover:bg-blue-700 text-white font-medium px-8"
-            >
-              Start Discussion
-            </Button>
-          )}
-        </ClientOnly>
       </CardContent>
     </Card>
   );

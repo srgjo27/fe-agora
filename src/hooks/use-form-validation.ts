@@ -19,7 +19,7 @@ interface UseFormValidationReturn<T> {
   setFormData: React.Dispatch<React.SetStateAction<T>>;
   setFormErrors: React.Dispatch<React.SetStateAction<Record<string, string>>>;
   handleChange: (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
   ) => void;
   validateField: (fieldName: keyof T, value: string) => ValidationResult | null;
   validateAllFields: () => boolean;
@@ -35,7 +35,6 @@ export function useFormValidation<T extends Record<string, any>>({
   const [formErrors, setFormErrors] = useState<Record<string, string>>({});
   const initialDataRef = useRef(initialData);
 
-  // Helper to update form errors
   const updateFieldError = useCallback((fieldName: keyof T, error: string) => {
     setFormErrors((prev) => ({
       ...prev,
@@ -59,7 +58,7 @@ export function useFormValidation<T extends Record<string, any>>({
   );
 
   const handleChange = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
       const { name, value } = e.target;
 
       setFormData((prev) => ({

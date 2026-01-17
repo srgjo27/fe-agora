@@ -2,9 +2,8 @@
 
 import { Card } from "@/components/ui/card";
 import {
-  ChevronUpIcon,
-  ChevronDownIcon,
   HandThumbUpIcon,
+  HandThumbDownIcon,
 } from "@heroicons/react/24/outline";
 import { ThreadSummaryResponse } from "@/types";
 import { capitalize, formatRelativeTime } from "@/utils";
@@ -34,19 +33,18 @@ export function ThreadList({ threads }: ThreadListProps) {
             <div className="flex items-start gap-5">
               {/* Vote Column */}
               <div className="flex flex-col items-center bg-gray-800/50 rounded-full px-2 py-1.5 border border-gray-700/50 min-w-[40px]">
-                <ChevronUpIcon className="w-4 h-4 text-gray-500 hover:text-blue-400 transition-colors" />
+                <HandThumbUpIcon className="w-4 h-4 text-green-500 hover:text-blue-400 transition-colors" />
                 <span
-                  className={`text-sm font-semibold my-0.5 ${
-                    thread.vote_count > 0
-                      ? "text-blue-400"
-                      : thread.vote_count < 0
-                      ? "text-red-400"
+                  className={`text-sm font-semibold my-0.5 ${thread.vote_count > 0
+                    ? "text-green-500"
+                    : thread.vote_count < 0
+                      ? "text-red-500"
                       : "text-gray-400"
-                  }`}
+                    }`}
                 >
                   {thread.vote_count}
                 </span>
-                <ChevronDownIcon className="w-4 h-4 text-gray-500 hover:text-red-400 transition-colors" />
+                <HandThumbDownIcon className="w-4 h-4 text-red-500 hover:text-red-400 transition-colors" />
               </div>
 
               {/* Content Column */}

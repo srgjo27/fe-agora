@@ -1,7 +1,12 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useAppDispatch, useAuthSelector, logoutUser } from "@/store";
+import {
+  useAppDispatch,
+  useAuthSelector,
+  logoutUser,
+  useIsAuthenticated,
+} from "@/store";
 import {
   UserGroupIcon,
   ChatBubbleLeftRightIcon,
@@ -15,13 +20,13 @@ import {
 import { Shield } from "lucide-react";
 import { Button } from "@/components/ui";
 import { DashboardOverview } from "@/components/features";
-import { usePathname } from "next/navigation";
 import { UserManagement } from "@/components/features/admin/user-management";
 import { ThreadManagement } from "@/components/features/admin/thread-management";
 
 export default function AdminDashboard() {
   const dispatch = useAppDispatch();
-  const { user, isAuthenticated } = useAuthSelector();
+  const { user } = useAuthSelector();
+  const { isAuthenticated } = useIsAuthenticated();
   const [isMounted, setIsMounted] = useState(false);
   const [activeTab, setActiveTab] = useState("overview");
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
