@@ -10,7 +10,6 @@ export * from "./forum/forum-filter";
 export * from "./forum/thread-list";
 export * from "./forum/forum-pagination";
 export * from "./forum/forum-sidebar";
-export * from "./forum/animated-background";
 export * from "./forum/create-thread-header";
 export * from "./forum/create-thread-form";
 export * from "./forum/create-thread-tips";

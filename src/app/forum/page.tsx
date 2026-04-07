@@ -39,7 +39,7 @@ export default function ForumPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-950 text-white relative">
+    <div className="min-h-screen bg-slate-50 text-slate-900 relative">
       <ForumHeader />
 
       {/* Main Content */}
@@ -58,18 +58,21 @@ export default function ForumPage() {
               {/* Search Bar */}
               <div className="relative flex-1 max-w-md">
                 <div className="relative">
-                  <MagnifyingGlassIcon className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
                   <Input
                     placeholder="Search discussions..."
-                    className="pl-10 bg-gray-900 border-gray-800 focus:border-blue-500 focus:ring-blue-500/20 rounded-lg"
+                    startIcon={
+                      <MagnifyingGlassIcon className="w-5 h-5 text-slate-400" />
+                    }
+                    className="border-slate-200 bg-white"
                   />
                 </div>
               </div>
+
               <ForumFilter />
             </div>
 
             {!threads || threads.length === 0 ? (
-              <ForumEmptyState isAuthenticated={isAuthenticated} />
+              <ForumEmptyState />
             ) : (
               <>
                 <ThreadList threads={threads} />

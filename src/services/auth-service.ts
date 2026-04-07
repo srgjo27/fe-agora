@@ -1,4 +1,3 @@
-// Auth service untuk authentication
 import { API_ENDPOINTS } from "@/constants";
 import { apiClient } from "@/services";
 import {

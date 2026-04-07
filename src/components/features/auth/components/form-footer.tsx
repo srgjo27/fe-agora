@@ -4,20 +4,20 @@ import { ROUTES } from "@/constants";
 export const FormFooter = () => (
   <>
     {/* Terms */}
-    <p className="text-xs text-center text-gray-500 leading-relaxed">
+    <p className="text-xs text-center text-slate-500 leading-relaxed">
       By signing in, you agree to our{" "}
-      <a href="#" className="text-blue-400 hover:text-blue-300 underline">
+      <a href="#" className="text-blue-600 hover:text-blue-500 underline">
         Security Policy
       </a>
     </p>
 
     {/* Register Link */}
     <div className="text-center">
-      <p className="text-sm text-gray-400">
+      <p className="text-sm text-slate-600">
         Don't have an account?{" "}
         <Link
           href={ROUTES.AUTH.REGISTER}
-          className="font-medium text-blue-400 hover:text-blue-300 transition-colors"
+          className="font-medium text-blue-600 hover:text-blue-500 transition-colors"
         >
           Sign up
         </Link>

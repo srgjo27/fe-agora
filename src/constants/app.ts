@@ -1,6 +1,3 @@
-// Application configuration constants
-
-// App Information
 export const APP_CONFIG = {
   NAME: 'Agora',
   VERSION: '1.0.0',
@@ -10,7 +7,6 @@ export const APP_CONFIG = {
   URL: process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'
 } as const
 
-// Environment
 export const ENVIRONMENT = {
   NODE_ENV: process.env.NODE_ENV || 'development',
   IS_DEVELOPMENT: process.env.NODE_ENV === 'development',
@@ -18,7 +14,6 @@ export const ENVIRONMENT = {
   IS_TEST: process.env.NODE_ENV === 'test'
 } as const
 
-// Storage Keys
 export const STORAGE_KEYS = {
   AUTH_TOKEN: 'auth_token',
   USER: 'user',
@@ -27,7 +22,6 @@ export const STORAGE_KEYS = {
   LANGUAGE: 'language'
 } as const
 
-// Pagination
 export const PAGINATION = {
   DEFAULT_PAGE: 1,
   DEFAULT_PER_PAGE: 10,
@@ -35,15 +29,13 @@ export const PAGINATION = {
   PER_PAGE_OPTIONS: [10, 20, 50, 100]
 } as const
 
-// File Upload
 export const UPLOAD = {
-  MAX_FILE_SIZE: 5 * 1024 * 1024, // 5MB
+  MAX_FILE_SIZE: 5 * 1024 * 1024,
   ALLOWED_IMAGE_TYPES: ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'],
   ALLOWED_DOCUMENT_TYPES: ['application/pdf', 'text/plain', 'application/msword'],
   MAX_FILES: 10
 } as const
 
-// Date Formats
 export const DATE_FORMATS = {
   DEFAULT: 'YYYY-MM-DD',
   DISPLAY: 'MMM DD, YYYY',
@@ -52,7 +44,6 @@ export const DATE_FORMATS = {
   ISO: 'YYYY-MM-DDTHH:mm:ss.sssZ'
 } as const
 
-// Currency
 export const CURRENCY = {
   DEFAULT: 'USD',
   SYMBOL: '$',
@@ -60,20 +51,17 @@ export const CURRENCY = {
   SUPPORTED: ['USD', 'EUR', 'GBP', 'JPY', 'IDR']
 } as const
 
-// User Roles
 export const USER_ROLES = {
   ADMIN: 'admin',
   MEMBER: 'member',
 } as const
 
-// Theme
 export const THEME = {
   LIGHT: 'light',
   DARK: 'dark',
   SYSTEM: 'system'
 } as const
 
-// Breakpoints (matching Tailwind CSS)
 export const BREAKPOINTS = {
   SM: 640,
   MD: 768,
@@ -82,7 +70,6 @@ export const BREAKPOINTS = {
   '2XL': 1536
 } as const
 
-// Z-Index Layers
 export const Z_INDEX = {
   BASE: 0,
   DROPDOWN: 1000,
@@ -95,14 +82,12 @@ export const Z_INDEX = {
   TOOLTIP: 1080
 } as const
 
-// Animation Durations (in milliseconds)
 export const ANIMATION = {
   FAST: 150,
   NORMAL: 300,
   SLOW: 500
 } as const
 
-// Debounce Delays (in milliseconds)
 export const DEBOUNCE = {
   SEARCH: 300,
   TYPING: 500,
@@ -110,7 +95,6 @@ export const DEBOUNCE = {
   RESIZE: 250
 } as const
 
-// Social Media Links
 export const SOCIAL_LINKS = {
   TWITTER: 'https://twitter.com/agora',
   FACEBOOK: 'https://facebook.com/agora',
@@ -119,7 +103,6 @@ export const SOCIAL_LINKS = {
   GITHUB: 'https://github.com/agora'
 } as const
 
-// Contact Information
 export const CONTACT_INFO = {
   EMAIL: 'info@agora.com',
   PHONE: '+1 (555) 123-4567',
@@ -127,7 +110,6 @@ export const CONTACT_INFO = {
   SUPPORT_EMAIL: 'support@agora.com',
 } as const
 
-// Feature Flags
 export const FEATURE_FLAGS = {
   ENABLE_DARK_MODE: true,
   ENABLE_NOTIFICATIONS: true,

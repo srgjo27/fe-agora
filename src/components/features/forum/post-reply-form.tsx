@@ -26,19 +26,19 @@ export function PostReplyForm({
     };
 
     return (
-        <div className="bg-gray-900 border border-gray-800 rounded-xl overflow-hidden shadow-lg ring-1 ring-blue-500/20">
-            <div className="p-4 bg-gray-900 border-b border-gray-800 flex items-center gap-3">
-                <div className="w-6 h-6 bg-blue-600 rounded-full flex items-center justify-center text-[10px] font-bold text-white">
+        <div className="bg-white border border-slate-200 rounded-xl overflow-hidden">
+            <div className="p-4 bg-slate-50 border-b border-slate-200 flex items-center gap-3">
+                <div className="w-6 h-6 bg-slate-600 rounded-full flex items-center justify-center text-[10px] font-bold text-white">
                     {username?.[0]?.toUpperCase()}
                 </div>
-                <span className="text-sm font-medium text-gray-300">
+                <span className="text-sm font-semibold text-slate-700">
                     Replying as {username}
                 </span>
             </div>
 
             <form onSubmit={handleSubmit} className="p-4">
                 <textarea
-                    className="w-full min-h-[150px] bg-transparent text-white placeholder-gray-600 text-sm resize-y focus:outline-none"
+                    className="w-full min-h-[150px] bg-transparent text-slate-900 placeholder-slate-400 text-sm resize-y focus:outline-none"
                     value={content}
                     onChange={(e) => setContent(e.target.value)}
                     placeholder="What are your thoughts?"
@@ -46,8 +46,8 @@ export function PostReplyForm({
                     autoFocus
                 />
 
-                <div className="flex items-center justify-between pt-4 mt-2 border-t border-gray-800">
-                    <div className="text-xs text-gray-500">Markdown supported</div>
+                <div className="flex items-center justify-between pt-4 mt-2 border-t border-slate-100">
+                    <div className="text-xs text-slate-500 font-medium">Markdown supported</div>
                     <div className="flex items-center gap-3">
                         <Button
                             type="button"
@@ -55,7 +55,7 @@ export function PostReplyForm({
                             size="sm"
                             onClick={onCancel}
                             disabled={isSubmitting}
-                            className="text-gray-400 hover:text-white"
+                            className="text-slate-500 hover:text-slate-900"
                         >
                             Cancel
                         </Button>

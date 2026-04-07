@@ -10,33 +10,33 @@ export function CreateThreadProgress({
     hasContent,
 }: CreateThreadProgressProps) {
     return (
-        <div className="bg-gray-900/40 backdrop-blur-xl border border-white/10 rounded-2xl p-6 shadow-xl">
-            <h3 className="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-4">
+        <div className="bg-white border border-slate-200 rounded-2xl p-6">
+            <h3 className="text-sm font-bold text-slate-400 uppercase tracking-widest mb-4">
                 Your Progress
             </h3>
             <div className="space-y-3">
                 <div className="flex items-center justify-between">
-                    <span className="text-sm text-gray-500">Title</span>
+                    <span className="text-sm text-slate-500 font-medium">Title</span>
                     <span
-                        className={`text-sm font-medium ${hasTitle ? "text-green-400" : "text-gray-600"
+                        className={`text-sm font-bold ${hasTitle ? "text-green-600" : "text-slate-300"
                             }`}
                     >
                         {hasTitle ? "✓ Done" : "Pending"}
                     </span>
                 </div>
                 <div className="flex items-center justify-between">
-                    <span className="text-sm text-gray-500">Category</span>
+                    <span className="text-sm text-slate-500 font-medium">Category</span>
                     <span
-                        className={`text-sm font-medium ${hasCategory ? "text-green-400" : "text-gray-600"
+                        className={`text-sm font-bold ${hasCategory ? "text-green-600" : "text-slate-300"
                             }`}
                     >
                         {hasCategory ? "✓ Done" : "Pending"}
                     </span>
                 </div>
                 <div className="flex items-center justify-between">
-                    <span className="text-sm text-gray-500">Content</span>
+                    <span className="text-sm text-slate-500 font-medium">Content</span>
                     <span
-                        className={`text-sm font-medium ${hasContent ? "text-green-400" : "text-gray-600"
+                        className={`text-sm font-bold ${hasContent ? "text-green-600" : "text-slate-300"
                             }`}
                     >
                         {hasContent ? "✓ Done" : "Pending"}

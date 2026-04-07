@@ -1,11 +1,8 @@
-// Local storage utilities dengan error handling
 class LocalStorage {
-  // Check if we're in browser environment
   private static isBrowser(): boolean {
     return typeof window !== "undefined" && typeof localStorage !== "undefined";
   }
 
-  // Set item with error handling
   static setItem(key: string, value: any): boolean {
     if (!this.isBrowser()) {
       return false;
@@ -22,7 +19,6 @@ class LocalStorage {
     }
   }
 
-  // Get item with error handling
   static getItem<T>(key: string, defaultValue?: T): T | null {
     if (!this.isBrowser()) {
       return defaultValue || null;
@@ -37,7 +33,6 @@ class LocalStorage {
     }
   }
 
-  // Remove item
   static removeItem(key: string): boolean {
     if (!this.isBrowser()) {
       return false;
@@ -52,7 +47,6 @@ class LocalStorage {
     }
   }
 
-  // Clear all items
   static clear(): boolean {
     if (!this.isBrowser()) {
       return false;
@@ -67,7 +61,6 @@ class LocalStorage {
     }
   }
 
-  // Check if key exists
   static hasItem(key: string): boolean {
     if (!this.isBrowser()) {
       return false;
@@ -76,7 +69,6 @@ class LocalStorage {
     return localStorage.getItem(key) !== null;
   }
 
-  // Get all keys
   static getAllKeys(): string[] {
     if (!this.isBrowser()) {
       return [];
@@ -92,9 +84,7 @@ class LocalStorage {
   }
 }
 
-// Session storage utilities
 class SessionStorage {
-  // Check if we're in browser environment
   private static isBrowser(): boolean {
     return (
       typeof window !== "undefined" && typeof sessionStorage !== "undefined"

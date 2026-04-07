@@ -34,19 +34,17 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(
     ref
   ) => {
     const selectClasses = cn(
-      "w-full h-12 px-4 py-3 text-sm bg-white dark:bg-gray-700 border rounded-xl appearance-none cursor-pointer transition-all duration-200",
-      "focus:outline-none focus:ring-2 focus:ring-offset-1",
-      "hover:border-gray-400 dark:hover:border-gray-500",
+      "w-full h-12 px-4 py-3 text-sm bg-white border rounded-lg appearance-none cursor-pointer transition-all duration-200",
+      "focus:outline-none",
       "disabled:cursor-not-allowed disabled:opacity-50",
       error
         ? "border-red-500 focus:border-red-500 focus:ring-red-500/20"
-        : "border-gray-300 dark:border-gray-600 focus:border-blue-500 focus:ring-blue-500/20",
+        : "border-gray-200",
       className
     );
 
     const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
       if (onChange) {
-        // Create a synthetic event that matches the expected type
         const syntheticEvent = {
           target: {
             name: e.target.name,
@@ -62,12 +60,13 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(
         {label && (
           <label
             htmlFor={props.id}
-            className="flex items-center space-x-2 mb-3 text-sm font-semibold text-gray-800 dark:text-gray-200"
+            className="flex items-center space-x-2 mb-3 text-sm font-semibold text-gray-800"
           >
             <span>{label}</span>
             {props.required && <span className="text-red-500 ml-1">*</span>}
           </label>
         )}
+
         <div className="relative">
           <select
             className={selectClasses}
@@ -83,6 +82,7 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(
               </option>
             ))}
           </select>
+
           {/* Custom dropdown arrow */}
           <div className="absolute inset-y-0 right-0 flex items-center pr-4 pointer-events-none">
             <svg
@@ -99,12 +99,15 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(
               />
             </svg>
           </div>
+
         </div>
+
         {error && (
-          <p className="mt-1 text-xs text-red-600 dark:text-red-400">{error}</p>
+          <p className="mt-1 text-xs text-red-600">{error}</p>
         )}
+
         {helpText && !error && (
-          <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
+          <p className="mt-1 text-xs text-gray-500">
             {helpText}
           </p>
         )}

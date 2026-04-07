@@ -11,7 +11,7 @@ export const Card = forwardRef<HTMLDivElement, CardProps>(
     const variants = {
       default: "bg-white border border-gray-200",
       outline: "border-2 border-gray-300 bg-transparent",
-      elevated: "bg-white shadow-lg border border-gray-100",
+      elevated: "bg-white border border-gray-100",
     };
 
     const paddings = {
@@ -38,7 +38,6 @@ export const Card = forwardRef<HTMLDivElement, CardProps>(
 
 Card.displayName = "Card";
 
-// Card subcomponents
 export const CardHeader = forwardRef<
   HTMLDivElement,
   HTMLAttributes<HTMLDivElement>

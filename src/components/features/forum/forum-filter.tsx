@@ -13,25 +13,25 @@ export function ForumFilter() {
       <Button
         variant="ghost"
         size="sm"
-        className="text-gray-400 hover:text-white hover:bg-gray-800 border border-gray-800 hover:border-gray-700 font-medium"
+        className="text-slate-600 hover:text-slate-900 bg-white border border-slate-200 hover:border-slate-300 font-medium"
       >
-        <AdjustmentsHorizontalIcon className="w-4 h-4 mr-2" />
+        <AdjustmentsHorizontalIcon className="w-4 h-4 mr-2 text-slate-400" />
         Filter
       </Button>
       <Button
         variant="ghost"
         size="sm"
-        className="text-gray-400 hover:text-white hover:bg-gray-800 border border-gray-800 hover:border-gray-700 font-medium"
+        className="text-slate-600 hover:text-slate-900 bg-white border border-slate-200 hover:border-slate-300 font-medium"
       >
-        <ChevronUpDownIcon className="w-4 h-4 mr-2" />
+        <ChevronUpDownIcon className="w-4 h-4 mr-2 text-slate-400" />
         Latest
       </Button>
       <Button
         variant="ghost"
         size="sm"
-        className="text-gray-400 hover:text-white hover:bg-gray-800 border border-gray-800 hover:border-gray-700"
+        className="text-slate-600 hover:text-slate-900 bg-white border border-slate-200 hover:border-slate-300"
       >
-        <Bars3Icon className="w-4 h-4" />
+        <Bars3Icon className="w-4 h-4 text-slate-400" />
       </Button>
     </div>
   );

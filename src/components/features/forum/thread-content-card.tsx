@@ -23,20 +23,20 @@ export function ThreadContentCard({
     isDeleting,
 }: ThreadContentCardProps) {
     return (
-        <div className="bg-gray-900/50 border border-gray-800 rounded-2xl overflow-hidden shadow-sm mb-12">
+        <div className="bg-white border border-slate-200 rounded-2xl overflow-hidden mb-12">
             <div className="p-8 lg:p-10">
-                <div className="prose prose-invert prose-lg max-w-none text-gray-300 leading-relaxed whitespace-pre-wrap">
+                <div className="prose prose-lg max-w-none text-slate-700 leading-relaxed whitespace-pre-wrap">
                     {thread.content}
                 </div>
             </div>
 
             {/* Action Bar */}
-            <div className="bg-gray-900/80 border-t border-gray-800 px-6 py-4 flex items-center justify-between gap-4">
+            <div className="bg-slate-50 border-t border-slate-100 px-6 py-4 flex items-center justify-between gap-4">
                 <div className="flex items-center gap-2">
                     <Button
                         variant="ghost"
                         size="sm"
-                        className="text-gray-400 hover:text-white hover:bg-gray-800 gap-2"
+                        className="text-slate-600 hover:text-blue-600 hover:bg-blue-50 gap-2 font-medium"
                         onClick={onReply}
                     >
                         <ChatBubbleLeftIcon className="w-4 h-4" />
@@ -45,7 +45,7 @@ export function ThreadContentCard({
                     <Button
                         variant="ghost"
                         size="sm"
-                        className="text-gray-400 hover:text-white hover:bg-gray-800 gap-2"
+                        className="text-slate-600 hover:text-slate-900 hover:bg-slate-100 gap-2 font-medium"
                     >
                         <ShareIcon className="w-4 h-4" />
                         Share
@@ -59,7 +59,7 @@ export function ThreadContentCard({
                             size="sm"
                             onClick={onDelete}
                             disabled={isDeleting}
-                            className="text-red-400 hover:text-red-300 hover:bg-red-500/10 gap-2"
+                            className="text-red-500 hover:text-red-600 hover:bg-red-50 gap-2 font-medium"
                         >
                             <TrashIcon className="w-4 h-4" />
                             {isDeleting ? "Deleting..." : "Delete"}

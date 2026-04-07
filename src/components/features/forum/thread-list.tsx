@@ -26,39 +26,39 @@ export function ThreadList({ threads }: ThreadListProps) {
       {threads.map((thread) => (
         <Card
           key={thread.id}
-          className="bg-gray-900 border border-gray-800 hover:border-gray-700 hover:-translate-y-1 hover:shadow-lg hover:shadow-blue-500/5 transition-all duration-200 cursor-pointer group"
+          className="bg-white border border-slate-200 hover:border-blue-200 cursor-pointer group"
           onClick={() => handleViewThread(thread.id)}
         >
           <div className="p-5">
-            <div className="flex items-start gap-5">
+            <div className="flex items-start gap-4">
               {/* Vote Column */}
-              <div className="flex flex-col items-center bg-gray-800/50 rounded-full px-2 py-1.5 border border-gray-700/50 min-w-[40px]">
-                <HandThumbUpIcon className="w-4 h-4 text-green-500 hover:text-blue-400 transition-colors" />
+              <div className="flex flex-col items-center bg-slate-100 rounded-full px-2 py-1 border border-slate-200 min-w-[40px]">
+                <HandThumbUpIcon className="w-4 h-4 text-slate-400 hover:text-blue-600 transition-colors" />
                 <span
                   className={`text-sm font-semibold my-0.5 ${thread.vote_count > 0
-                    ? "text-green-500"
+                    ? "text-blue-600"
                     : thread.vote_count < 0
                       ? "text-red-500"
-                      : "text-gray-400"
+                      : "text-slate-500"
                     }`}
                 >
                   {thread.vote_count}
                 </span>
-                <HandThumbDownIcon className="w-4 h-4 text-red-500 hover:text-red-400 transition-colors" />
+                <HandThumbDownIcon className="w-4 h-4 text-slate-400 hover:text-red-600 transition-colors" />
               </div>
 
               {/* Content Column */}
               <div className="flex-1 min-w-0 space-y-2">
-                <div className="flex items-center gap-2 text-xs text-gray-500 mb-1">
+                <div className="flex items-center gap-2 text-xs text-slate-500 mb-1">
                   {thread.category && (
-                    <span className="px-2.5 py-0.5 rounded-full bg-blue-500/10 text-blue-400 font-medium">
+                    <span className="px-2.5 py-0.5 rounded-full bg-blue-50 text-blue-600 font-medium border border-blue-100">
                       {capitalize(thread.category.name)}
                     </span>
                   )}
                   <span>•</span>
-                  <span className="text-gray-400">
+                  <span className="text-slate-500 font-medium">
                     Posted by{" "}
-                    <span className="text-gray-300 font-medium hover:text-blue-400 transition-colors">
+                    <span className="text-blue-600 hover:text-blue-700 transition-colors">
                       {thread.author?.username || "anonymous"}
                     </span>
                   </span>
@@ -66,19 +66,19 @@ export function ThreadList({ threads }: ThreadListProps) {
                   <span>{formatRelativeTime(thread.created_at)}</span>
                 </div>
 
-                <h3 className="text-lg font-semibold text-gray-100 group-hover:text-blue-400 transition-colors line-clamp-2">
+                <h3 className="text-lg font-semibold text-slate-900">
                   {thread.title}
                 </h3>
 
                 {/* Badges */}
                 <div className="flex items-center gap-2 pt-1">
                   {thread.is_pinned && (
-                    <span className="inline-flex items-center px-2 py-0.5 text-[10px] font-semibold bg-yellow-500/10 text-yellow-500 rounded-full">
+                    <span className="inline-flex items-center px-2 py-0.5 text-[10px] font-semibold bg-amber-50 text-amber-600 rounded-full border border-amber-100">
                       PINNED
                     </span>
                   )}
                   {thread.is_locked && (
-                    <span className="inline-flex items-center px-2 py-0.5 text-[10px] font-semibold bg-red-500/10 text-red-500 rounded-full">
+                    <span className="inline-flex items-center px-2 py-0.5 text-[10px] font-semibold bg-red-50 text-red-600 rounded-full border border-red-100">
                       LOCKED
                     </span>
                   )}
@@ -88,17 +88,18 @@ export function ThreadList({ threads }: ThreadListProps) {
           </div>
 
           {/* Footer Actions */}
-          <div className="px-5 py-3 bg-gray-800/30 border-t border-gray-800 flex items-center gap-6 text-sm text-gray-500">
+          <div className="px-5 py-3 bg-slate-50/50 border-t border-slate-100 flex items-center gap-6 text-sm text-slate-500">
             <button
               onClick={(e) => {
                 e.stopPropagation();
               }}
-              className="flex items-center gap-2 hover:text-blue-400 transition-colors"
+              className="flex items-center gap-2 hover:text-blue-600 transition-colors font-medium"
             >
               <HandThumbUpIcon className="w-4 h-4" />
               <span>Like</span>
             </button>
           </div>
+
         </Card>
       ))}
     </div>

@@ -15,14 +15,14 @@ export function ForumHeader() {
   };
 
   return (
-    <div className="bg-gray-950 border-b border-gray-800">
+    <div className="bg-slate-50 border-b border-slate-200">
       <div className="max-w-7xl mx-auto px-6 py-8">
         <div className="flex items-center justify-between">
           <div className="space-y-1">
-            <h1 className="text-3xl font-bold text-white tracking-tight">
+            <h1 className="text-3xl font-bold text-slate-900 tracking-tight">
               Community Forum
             </h1>
-            <p className="text-gray-400 text-base">
+            <p className="text-slate-500 text-base font-medium">
               Connect, collaborate, and share knowledge with the community.
             </p>
           </div>
@@ -31,7 +31,7 @@ export function ForumHeader() {
               <Button
                 variant="ghost"
                 onClick={handleLogout}
-                className="text-gray-400 hover:text-white hover:bg-gray-800"
+                className="text-slate-600 hover:text-slate-900 hover:bg-slate-200"
               >
                 <ArrowRightOnRectangleIcon className="w-5 h-5 mr-2" />
                 Log out

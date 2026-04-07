@@ -13,7 +13,7 @@ class ApiClient {
         "Content-Type": "application/json",
       },
       timeout: 10000,
-      withCredentials: true, // Untuk mengirim cookies (refresh token)
+      withCredentials: true,
     });
 
     this.axiosInstance.interceptors.request.use(
@@ -21,6 +21,7 @@ class ApiClient {
         if (!config.headers.Authorization) {
           const authState = LocalStorage.getItem<any>("persist:auth");
           const cleanToken = JSON.parse(authState.token);
+          
           if (cleanToken) config.headers.Authorization = `Bearer ${cleanToken}`;
         }
 
@@ -76,19 +77,16 @@ class ApiClient {
     );
   }
 
-  // Set auth token untuk semua request
   setAuthToken(token: string): void {
     this.axiosInstance.defaults.headers.common[
       "Authorization"
     ] = `Bearer ${token}`;
   }
 
-  // Hapus auth token
   clearAuthToken(): void {
     delete this.axiosInstance.defaults.headers.common["Authorization"];
   }
 
-  // Helper method untuk transform axios response
   private transformResponse<T>(response: AxiosResponse): ApiResponse<T> {
     return {
       status: response.status,
@@ -97,7 +95,6 @@ class ApiClient {
     };
   }
 
-  // HTTP Methods
   async get<T>(
     endpoint: string,
     params?: Record<string, any>
@@ -147,6 +144,5 @@ class ApiClient {
   }
 }
 
-// Export singleton instance
 export const apiClient = new ApiClient();
 export default apiClient;

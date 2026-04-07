@@ -1,5 +1,4 @@
-export const API_BASE_URL =
-  process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8080/api/v1";
+export const API_BASE_URL = "http://localhost:8080/api";
 
 export const API_ENDPOINTS = {
   AUTH: {
@@ -8,30 +7,23 @@ export const API_ENDPOINTS = {
     LOGOUT: "/auth/logout",
     REFRESH: "/auth/refresh",
   },
-
   USERS: {
     ME: "/users/me",
   },
-
   CATEGORIES: "/categories",
-
   FORUM: {
     THREADS: "/threads",
     THREAD_DETAIL: (id: string) => `/threads/${id}`,
-
     POSTS: (id: string) => `/threads/${id}/posts`,
-
     VOTE_ON_THREAD: (id: string) => `/threads/${id}/vote`,
     VOTE_ON_POST: (id: string) => `/posts/${id}/vote`,
   },
-
   ADMIN: {
     GET_USERS: "/admin/users",
     CATEGORY_CREATE: "/admin/categories",
   },
 } as const;
 
-// HTTP Status Codes
 export const HTTP_STATUS = {
   OK: 200,
   CREATED: 201,
@@ -45,7 +37,6 @@ export const HTTP_STATUS = {
   INTERNAL_SERVER_ERROR: 500,
 } as const;
 
-// Error Messages
 export const ERROR_MESSAGES = {
   NETWORK_ERROR: "Network error. Please check your connection.",
   UNAUTHORIZED: "You are not authorized to perform this action.",

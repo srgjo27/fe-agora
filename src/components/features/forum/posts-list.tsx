@@ -39,11 +39,11 @@ export function PostsList({
         <>
             {/* Divider */}
             <div className="relative flex items-center py-8 mb-8">
-                <div className="flex-grow border-t border-gray-800"></div>
-                <span className="flex-shrink-0 mx-4 text-gray-500 text-sm font-medium">
+                <div className="grow border-t border-slate-200"></div>
+                <span className="shrink-0 mx-4 text-slate-500 text-sm font-semibold bg-slate-50 px-3 py-1 rounded-full border border-slate-100">
                     {posts?.length || 0} Replies
                 </span>
-                <div className="flex-grow border-t border-gray-800"></div>
+                <div className="grow border-t border-slate-200"></div>
             </div>
 
             {/* Comments Section */}
@@ -53,21 +53,21 @@ export function PostsList({
                         <Loading size="md" />
                     </div>
                 ) : !posts || posts.length === 0 ? (
-                    <div className="text-center py-16 bg-gray-900/30 rounded-2xl border border-gray-800 border-dashed">
-                        <div className="w-16 h-16 bg-gray-800 rounded-full flex items-center justify-center mx-auto mb-4">
-                            <ChatBubbleLeftIcon className="w-8 h-8 text-gray-600" />
+                    <div className="text-center py-16 bg-white rounded-2xl border border-slate-200 border-dashed">
+                        <div className="w-16 h-16 bg-slate-50 rounded-full flex items-center justify-center mx-auto mb-4 border border-slate-100">
+                            <ChatBubbleLeftIcon className="w-8 h-8 text-slate-400" />
                         </div>
-                        <h3 className="text-lg font-medium text-white mb-2">
+                        <h3 className="text-lg font-semibold text-slate-900 mb-2">
                             No replies yet
                         </h3>
-                        <p className="text-gray-500 mb-6">
+                        <p className="text-slate-500 mb-6 font-medium">
                             Be the first to share your thoughts on this topic.
                         </p>
                     </div>
                 ) : (
                     <div className="relative space-y-8">
                         {/* Vertical Thread Line */}
-                        <div className="absolute left-5 top-4 bottom-4 w-px bg-gray-800 hidden md:block" />
+                        <div className="absolute left-5 top-4 bottom-4 w-px bg-slate-200 hidden md:block" />
 
                         {posts.map((post) => (
                             <PostItem key={post.id} post={post} />
@@ -79,13 +79,13 @@ export function PostsList({
             {/* Reply Form */}
             <ClientOnly>
                 {isAuthenticated && username && (
-                    <div ref={replyFormRef} className="mt-12 pt-8 border-t border-gray-800">
+                    <div ref={replyFormRef} className="mt-12 pt-8 border-t border-slate-200">
                         {!showReplyForm ? (
                             <button
                                 onClick={() => setShowReplyForm(true)}
-                                className="w-full py-4 bg-gray-900/50 border border-gray-800 border-dashed rounded-xl text-gray-500 hover:text-white hover:bg-gray-900 hover:border-gray-700 transition-all flex items-center justify-center gap-2 group"
+                                className="w-full py-4 bg-white border border-slate-200 border-dashed rounded-xl text-slate-500 hover:text-blue-600 hover:bg-slate-50 hover:border-blue-300 transition-all flex items-center justify-center gap-2 group font-medium"
                             >
-                                <ChatBubbleLeftIcon className="w-5 h-5 group-hover:text-blue-400" />
+                                <ChatBubbleLeftIcon className="w-5 h-5 text-slate-400 group-hover:text-blue-500" />
                                 <span>Write a reply...</span>
                             </button>
                         ) : (

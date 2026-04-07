@@ -1,8 +1,9 @@
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import { User } from "@/types/user";
-import { authService, LoginRequest, RegisterRequest } from "@/services";
+import { authService } from "@/services";
 import { safeRedirect } from "@/utils";
 import { ROUTES } from "@/constants";
+import { LoginRequest, RegisterRequest } from "@/types";
 
 interface AuthState {
   user: User | null;
@@ -109,17 +110,14 @@ const authSlice = createSlice({
       state.isAuthenticated = !!action.payload;
     },
     initializeAuth: (state) => {
-      // Jika sudah ada token di state (dari persist), gunakan itu
       if (state.token && authService.isAuthenticated(state.token)) {
         authService.initializeAuth(state.token);
 
         const userInfo = authService.getUserFromToken(state.token);
         if (userInfo && !state.user) {
-          // Hanya update user info jika belum ada
           state.isAuthenticated = true;
         }
       } else {
-        // Reset state jika token tidak valid
         state.user = null;
         state.token = null;
         state.isAuthenticated = false;

@@ -26,7 +26,7 @@ export const RegisterFormInput = ({
   <div>
     <label
       htmlFor={id}
-      className="block text-sm font-medium text-gray-300 mb-2"
+      className="block text-sm font-semibold text-slate-700 mb-2"
     >
       {label}
     </label>
@@ -39,16 +39,16 @@ export const RegisterFormInput = ({
       placeholder={placeholder}
       disabled={disabled}
       autoComplete={autoComplete}
-      className={`w-full px-4 py-3 rounded-lg border transition-all duration-200 bg-gray-900 text-white placeholder-gray-500 ${
+      className={`w-full px-4 py-3 rounded-xl border transition-all duration-200 bg-white text-slate-900 placeholder-slate-400 font-medium ${
         error
           ? "border-red-500 focus:border-red-500 focus:ring-red-500/20"
-          : "border-gray-700 focus:border-blue-500 focus:ring-blue-500/20"
+          : "border-slate-200 focus:border-blue-500 focus:ring-blue-500/10"
       } focus:outline-none focus:ring-2 disabled:opacity-50`}
     />
     {error && (
       <div className="flex items-center mt-2 text-red-400 text-xs">
         <svg
-          className="w-4 h-4 mr-1 flex-shrink-0"
+          className="w-4 h-4 mr-1 shrink-0"
           fill="currentColor"
           viewBox="0 0 20 20"
         >

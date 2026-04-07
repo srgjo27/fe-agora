@@ -28,34 +28,34 @@ interface ForumDetailPageProps {
 }
 
 const ThreadSkeleton = () => (
-  <div className="min-h-screen bg-gray-950 text-white relative overflow-hidden">
+  <div className="min-h-screen bg-slate-50 text-slate-900 relative overflow-hidden">
     <div className="relative max-w-7xl mx-auto px-6 py-12">
       {/* Header Skeleton */}
       <div className="space-y-6 mb-12 max-w-4xl">
         <div className="flex items-center space-x-2 mb-8">
-          <div className="h-4 w-16 bg-gray-900 rounded animate-pulse" />
-          <div className="h-4 w-4 bg-gray-900 rounded animate-pulse" />
-          <div className="h-4 w-24 bg-gray-900 rounded animate-pulse" />
+          <div className="h-4 w-16 bg-slate-200 rounded animate-pulse" />
+          <div className="h-4 w-4 bg-slate-200 rounded animate-pulse" />
+          <div className="h-4 w-24 bg-slate-200 rounded animate-pulse" />
         </div>
-        <div className="h-12 w-3/4 bg-gray-900 rounded animate-pulse" />
+        <div className="h-12 w-3/4 bg-slate-200 rounded animate-pulse" />
         <div className="flex items-center space-x-4">
-          <div className="w-10 h-10 bg-gray-900 rounded-full animate-pulse" />
-          <div className="h-4 w-32 bg-gray-900 rounded animate-pulse" />
+          <div className="w-10 h-10 bg-slate-200 rounded-full animate-pulse" />
+          <div className="h-4 w-32 bg-slate-200 rounded animate-pulse" />
         </div>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
         {/* Vote Rail Skeleton */}
         <div className="lg:col-span-1 hidden lg:block">
-          <div className="h-32 w-12 bg-gray-900 rounded-full animate-pulse" />
+          <div className="h-32 w-12 bg-slate-200 rounded-full animate-pulse" />
         </div>
         {/* Content Skeleton */}
         <div className="lg:col-span-11 space-y-8">
-          <div className="h-64 bg-gray-900 rounded-xl animate-pulse border border-gray-800" />
+          <div className="h-64 bg-white rounded-xl animate-pulse border border-slate-200" />
           <div className="space-y-6 mt-12">
-            <div className="h-8 w-32 bg-gray-900 rounded animate-pulse" />
-            <div className="h-32 bg-gray-900 rounded-xl animate-pulse border border-gray-800" />
-            <div className="h-32 bg-gray-900 rounded-xl animate-pulse border border-gray-800" />
+            <div className="h-8 w-32 bg-slate-200 rounded animate-pulse" />
+            <div className="h-32 bg-white rounded-xl animate-pulse border border-slate-200" />
+            <div className="h-32 bg-white rounded-xl animate-pulse border border-slate-200" />
           </div>
         </div>
       </div>
@@ -74,12 +74,14 @@ export default function ForumDetailPage({ params }: ForumDetailPageProps) {
     error: threadError,
     refetch: refetchThread,
   } = useThreadById(thread_id);
+
   const {
     posts,
     isLoading: postsLoading,
     error: postsError,
     refetch: refetchPosts,
   } = usePostsByThreadId(thread_id);
+
   const { createPost } = useCreatePost(thread_id);
   const { deleteThread, isLoading: isDeleting } = useDeleteThread();
   const { voteThread, isLoading: isVoting } = useVoteThread();
@@ -153,12 +155,12 @@ export default function ForumDetailPage({ params }: ForumDetailPageProps) {
 
   if (!thread) {
     return (
-      <div className="min-h-screen bg-gray-950 text-white flex items-center justify-center">
+      <div className="min-h-screen bg-slate-50 text-slate-900 flex items-center justify-center">
         <div className="text-center space-y-4">
-          <div className="w-16 h-16 bg-gray-900 rounded-full flex items-center justify-center mx-auto border border-gray-800">
-            <HashtagIcon className="w-8 h-8 text-gray-600" />
+          <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center mx-auto border border-slate-200 shadow-sm">
+            <HashtagIcon className="w-8 h-8 text-slate-400" />
           </div>
-          <h1 className="text-2xl font-bold text-gray-300">Thread not Found</h1>
+          <h1 className="text-2xl font-bold text-slate-900">Thread not Found</h1>
           <Button variant="outline" onClick={handleBack}>
             Return to Forum
           </Button>
@@ -168,12 +170,7 @@ export default function ForumDetailPage({ params }: ForumDetailPageProps) {
   }
 
   return (
-    <div className="min-h-screen bg-gray-950 text-white relative selection:bg-blue-500/30">
-      {/* Background Gradient Mesh */}
-      <div className="fixed inset-0 pointer-events-none">
-        <div className="absolute top-0 left-1/4 w-96 h-96 bg-blue-900/10 rounded-full blur-3xl" />
-        <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-indigo-900/10 rounded-full blur-3xl" />
-      </div>
+    <div className="min-h-screen bg-slate-50 text-slate-900 relative selection:bg-blue-100">
 
       <div className="relative max-w-7xl mx-auto px-6 py-12">
         <ThreadDetailHeader thread={thread} onBack={handleBack} />

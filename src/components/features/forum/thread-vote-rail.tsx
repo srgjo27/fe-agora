@@ -16,22 +16,22 @@ export function ThreadVoteRail({
 }: ThreadVoteRailProps) {
     return (
         <div className="sticky top-8 flex flex-col items-center gap-2">
-            <div className="flex flex-col items-center bg-gray-900/50 backdrop-blur-sm border border-gray-800 rounded-full p-1.5 shadow-lg">
+            <div className="flex flex-col items-center bg-white border border-slate-200 rounded-full p-1">
                 <button
                     onClick={() => onVote(1)}
                     disabled={isVoting}
-                    className="p-2.5 rounded-full text-gray-400 hover:text-blue-400 hover:bg-blue-500/10 transition-all disabled:opacity-50"
+                    className="p-2 rounded-full text-slate-400 hover:text-blue-600 hover:bg-blue-50 transition-all disabled:opacity-50"
                     title="Upvote"
                 >
-                    <HandThumbUpIcon className="w-6 h-6 text-green-500" />
+                    <HandThumbUpIcon className="w-6 h-6 text-slate-400 hover:text-blue-600" />
                 </button>
 
                 <span
                     className={`font-bold text-sm py-1 ${voteCount > 0
-                            ? "text-green-500"
-                            : voteCount < 0
-                                ? "text-red-400"
-                                : "text-gray-400"
+                        ? "text-blue-600"
+                        : voteCount < 0
+                            ? "text-red-500"
+                            : "text-slate-500"
                         }`}
                 >
                     {voteCount}
@@ -40,10 +40,10 @@ export function ThreadVoteRail({
                 <button
                     onClick={() => onVote(-1)}
                     disabled={isVoting}
-                    className="p-2.5 rounded-full text-gray-400 hover:text-red-400 hover:bg-red-500/10 transition-all disabled:opacity-50"
+                    className="p-2.5 rounded-full text-slate-400 hover:text-red-600 hover:bg-red-50 transition-all disabled:opacity-50"
                     title="Downvote"
                 >
-                    <HandThumbDownIcon className="w-6 h-6 text-red-500" />
+                    <HandThumbDownIcon className="w-6 h-6 text-slate-400 hover:text-red-600" />
                 </button>
             </div>
         </div>

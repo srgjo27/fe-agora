@@ -6,7 +6,6 @@ import { useFormValidation } from "@/hooks/use-form-validation";
 import { forumService } from "@/services/forum-service";
 import { CategoryResponse } from "@/types";
 import {
-  AnimatedBackground,
   CreateThreadHeader,
   CreateThreadForm,
   CreateThreadTips,
@@ -39,8 +38,7 @@ export default function CreateThreadPage() {
       try {
         const data = await forumService.getCategories();
         setCategories(data);
-      } catch (error) {
-        console.error("Failed to fetch categories:", error);
+      } catch (_) {
       } finally {
         setIsLoading(false);
       }
@@ -60,17 +58,14 @@ export default function CreateThreadPage() {
         category_id: formData.categoryId,
       });
       router.push("/forum");
-    } catch (error) {
-      console.error("Failed to create thread:", error);
+    } catch (_) {
     } finally {
       setIsSubmitting(false);
     }
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-950 via-gray-900 to-gray-950 text-gray-100 relative overflow-hidden">
-      <AnimatedBackground />
-
+    <div className="min-h-screen bg-slate-50 text-slate-900 relative">
       <CreateThreadHeader
         onBack={() => router.back()}
         onDiscard={() => router.back()}
@@ -80,6 +75,7 @@ export default function CreateThreadPage() {
 
       <main className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+
           {/* Main Editor Area */}
           <div className="lg:col-span-8">
             <CreateThreadForm
