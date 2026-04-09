@@ -1,36 +1,64 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Agora 🏛️
 
-## Getting Started
+Agora is a modern, high-performance community platform designed for meaningful conversations. Built with the latest web technologies, it provides a seamless and engaging experience for users to connect, share ideas, and build communities.
 
-First, run the development server:
+## ✨ Key Features
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+- **Dynamic Forum**: Create threads, engage in discussions, and interact with community members in real-time.
+- **User Dashboard**: Personalized experience for managing posts, profiles, and activities.
+- **Secure Authentication**: Robust login and registration system using Redux for state persistence.
+- **Premium Design**: A sophisticated light theme (Slate/White/Blue) with smooth animations and responsive layouts.
+- **Real-time Interactions**: Fast and reactive UI built on React 19 and Next.js 16.
+
+## 🚀 Tech Stack
+
+- **Core**: [Next.js 16](https://nextjs.org/) (App Router), [React 19](https://react.dev/)
+- **Language**: [TypeScript](https://www.typescriptlang.org/)
+- **Styling**: [Tailwind CSS 4](https://tailwindcss.com/), [Lucide React](https://lucide.dev/)
+- **State Management**: [Redux Toolkit](https://redux-toolkit.js.org/), [Redux Persist](https://github.com/rt2zz/redux-persist)
+- **Animations**: [Framer Motion](https://www.framer.com/motion/)
+- **HTTP Client**: [Axios](https://axios-http.com/)
+- **Utilities**: `date-fns`, `clsx`, `tailwind-merge`
+
+## 🛠️ Getting Started
+
+### Prerequisites
+
+- Node.js 18+ 
+- npm or yarn
+
+### Installation
+
+1. Clone the repository:
+   ```bash
+   git clone <repository-url>
+   cd fe-agora
+   ```
+
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
+
+3. Set up environment variables:
+   ```bash
+   cp .env.example .env
+   # Update the values in .env as needed
+   ```
+
+4. Run the development server:
+   ```bash
+   npm run dev
+   ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 📂 Project Structure
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- `src/app`: Next.js App Router pages and layouts.
+- `src/components`: Reusable UI components and feature-specific modules.
+- `src/store`: Redux state management configuration and slices.
+- `src/services`: API service layers and external integrations.
+- `src/hooks`: Custom React hooks for shared logic.
+- `src/types`: TypeScript definitions and interfaces.
+- `src/utils`: Helper functions and utility constants.
